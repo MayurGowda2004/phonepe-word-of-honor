@@ -12,7 +12,10 @@ function hardenKiosk() {
   if (!shouldHardenKiosk()) return;
 
   window.addEventListener("contextmenu", (e) => e.preventDefault(), { passive: false });
-  window.addEventListener("selectstart", (e) => e.preventDefault(), { passive: false });
+  window.addEventListener("selectstart", (e) => {
+    if (e.target.closest("input, textarea")) return;
+    e.preventDefault();
+  }, { passive: false });
   window.addEventListener("gesturestart", (e) => e.preventDefault(), { passive: false });
 
   try {
@@ -354,6 +357,9 @@ function generateWordSearch(words, cfgGrid, seed) {
 
 // ---- State machine ----
 const Screen = {
+  ENTER_NAME: "enter_name",
+  ENTER_EMP_ID: "enter_emp_id",
+  RULES: "rules",
   START: "start",
   QUIZ: "quiz",
   WORDFIND: "wordfind",
@@ -363,7 +369,10 @@ const Screen = {
 let cfg;
 let gridAbort = null;
 let state = {
-  screen: Screen.START,
+  screen: Screen.ENTER_NAME,
+  playerName: "",
+  employeeId: "",
+  formError: null,
   questionIndex: 0,
   puzzleVariant: 0,
   roundQuestions: [],
@@ -385,28 +394,65 @@ let state = {
   revealTarget: false,
 };
 
+function playerChip() {
+  if (!state.playerName) return "";
+  const id = state.employeeId ? ` · ${escapeHtml(state.employeeId)}` : "";
+  return `<span class="chip">${escapeHtml(state.playerName)}${id}</span>`;
+}
+
+function validateName(value) {
+  const v = String(value || "").trim();
+  if (v.length < 2) return "Please enter your name (at least 2 characters).";
+  if (v.length > 60) return "Name is too long.";
+  return null;
+}
+
+function validateEmployeeId(value) {
+  const v = String(value || "").trim();
+  if (v.length < 2) return "Please enter your Employee ID (at least 2 characters).";
+  if (v.length > 30) return "Employee ID is too long.";
+  if (!/^[A-Za-z0-9\-_.]+$/.test(v)) return "Employee ID can only use letters, numbers, - _ .";
+  return null;
+}
+
+function questionLabel(index) {
+  return `Question ${index + 1}`;
+}
+
+function wordFindLabel(index) {
+  return index === 0 ? "Find the word" : `Find the word · Round ${index + 1}`;
+}
+
 function activeQuestion() {
   return state.roundQuestions[state.questionIndex];
 }
 
+function goEnterName() {
+  state.screen = Screen.ENTER_NAME;
+  state.formError = null;
+  render();
+}
+
+function goEnterEmpId() {
+  state.screen = Screen.ENTER_EMP_ID;
+  state.formError = null;
+  render();
+}
+
+function goRules() {
+  state.screen = Screen.RULES;
+  state.formError = null;
+  render();
+}
+
+function goReady() {
+  state.screen = Screen.START;
+  state.formError = null;
+  render();
+}
+
 function roundsPerGame() {
   return Math.min(cfg.roundsPerGame ?? 2, cfg.questions.length);
-}
-
-/** Game Rules: 4 interactive rounds = 2 MCQs + 2 keyword games. */
-function interactiveRoundTotal() {
-  return cfg.interactiveRounds ?? roundsPerGame() * 2;
-}
-
-function currentInteractiveRound() {
-  if (state.screen === Screen.QUIZ) return state.questionIndex * 2 + 1;
-  if (state.screen === Screen.WORDFIND) return state.questionIndex * 2 + 2;
-  return 0;
-}
-
-function interactiveRoundLabel(n) {
-  const labels = ["MCQ 1", "Keyword Game 1", "MCQ 2", "Keyword Game 2"];
-  return labels[n - 1] ?? `Round ${n}`;
 }
 
 function clearGridHandlers() {
@@ -511,7 +557,7 @@ async function answerQuiz(optionIndex) {
   const pts = sectionPoints();
   const quizPts = correct ? pts : 0;
   const correctLabel = shuffled.options[shuffled.correctIndex];
-  const mcqLabel = state.questionIndex === 0 ? "MCQ 1" : "MCQ 2";
+  const mcqLabel = questionLabel(state.questionIndex);
 
   state.currentRound = { quiz: quizPts, word: 0, quizCorrect: correct, keywordSkipped: !correct };
   state.quizReveal = { picked: optionIndex, correct: shuffled.correctIndex };
@@ -520,7 +566,7 @@ async function answerQuiz(optionIndex) {
     beep("bad");
     const nextHint = isFinalMcqRound()
       ? "Game over — see your score"
-      : "Keyword game skipped — moving to Round 3 (MCQ 2)";
+      : "Find the word skipped — moving to next question";
     state.feedback = {
       type: "bad",
       text: `${mcqLabel} incorrect — correct answer: ${correctLabel}. ${nextHint}`,
@@ -535,8 +581,8 @@ async function answerQuiz(optionIndex) {
   }
 
   beep("good");
-  const kwLabel = state.questionIndex === 0 ? "Keyword Game 1" : "Keyword Game 2";
-  state.feedback = { type: "good", text: `${mcqLabel} correct! +${quizPts} pts — unlock ${kwLabel}` };
+  const kwLabel = wordFindLabel(state.questionIndex);
+  state.feedback = { type: "good", text: `${mcqLabel} correct! +${quizPts} pts — ${kwLabel}` };
   render();
   await delay(1100);
   if (state.screen !== Screen.QUIZ) return;
@@ -672,7 +718,10 @@ function endGame() {
 function goStart() {
   clearTimers();
   clearGridHandlers();
-  state.screen = Screen.START;
+  state.screen = Screen.ENTER_NAME;
+  state.playerName = "";
+  state.employeeId = "";
+  state.formError = null;
   state.questionIndex = 0;
   state.roundQuestions = [];
   state.totalScore = 0;
@@ -821,47 +870,198 @@ function buildGridHtml(gridData, interactive = true) {
   return html;
 }
 
-function renderStart() {
-  const wordSec = cfg.wordFindSeconds ?? 20;
-  const pts = sectionPoints();
-  const maxScore = roundsPerGame() * pts * 2;
+function renderFlowStep(step, total, label) {
+  return `<div class="flow-step">Step ${step} of ${total} · ${label}</div>`;
+}
+
+function renderFormError() {
+  if (!state.formError) return "";
+  return `<div class="form-error">${escapeHtml(state.formError)}</div>`;
+}
+
+function attachFormSubmit(selector, onSubmit) {
+  const form = document.querySelector(selector);
+  if (!form) return;
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    onSubmit(new FormData(form));
+  });
+  const input = form.querySelector("input");
+  input?.focus();
+  input?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      form.requestSubmit();
+    }
+  });
+}
+
+function renderEnterName() {
   $app.innerHTML = `
     <div class="screen">
-      ${renderHeader("PhonePe Integrity", "Word of Honor", `<span class="chip">${cfg.kioskResolution ?? "1920×1080"}</span>`)}
+      ${renderHeader("PhonePe Integrity", "Word of Honor", renderFlowStep(1, 4, "Enter Name"))}
+      <div class="screen-body form-body">
+        <div class="card card-sm form-card">
+          <h2 class="form-title">Enter your name</h2>
+          <p class="form-lead">Please enter your full name to begin the Integrity challenge.</p>
+          <form class="player-form" data-form="name">
+            <label class="field-label" for="player-name">Name</label>
+            <input id="player-name" class="field-input" name="name" type="text"
+              autocomplete="name" enterkeyhint="next" maxlength="60"
+              placeholder="Your name" value="${escapeHtml(state.playerName)}" />
+            ${renderFormError()}
+            <button class="btn btn-primary" type="submit">Continue</button>
+          </form>
+        </div>
+      </div>
+      <footer class="footer">
+        <span>Touch to type · then tap Continue</span>
+      </footer>
+    </div>
+  `;
+  attachFormSubmit("[data-form=name]", (fd) => {
+    const name = String(fd.get("name") || "").trim();
+    const err = validateName(name);
+    if (err) {
+      state.formError = err;
+      state.playerName = name;
+      render();
+      return;
+    }
+    state.playerName = name;
+    goEnterEmpId();
+  });
+}
+
+function renderEnterEmpId() {
+  $app.innerHTML = `
+    <div class="screen">
+      ${renderHeader("PhonePe Integrity", "Word of Honor", renderFlowStep(2, 4, "Employee ID"))}
+      <div class="screen-body form-body">
+        <div class="card card-sm form-card">
+          <h2 class="form-title">Enter Employee ID</h2>
+          <p class="form-lead">Hi ${escapeHtml(state.playerName)}, enter your Employee ID to continue.</p>
+          <form class="player-form" data-form="emp">
+            <label class="field-label" for="employee-id">Employee ID</label>
+            <input id="employee-id" class="field-input" name="employeeId" type="text"
+              inputmode="text" enterkeyhint="next" maxlength="30"
+              placeholder="Employee ID" value="${escapeHtml(state.employeeId)}" />
+            ${renderFormError()}
+            <div class="form-actions">
+              <button class="btn btn-secondary" type="button" data-back>Back</button>
+              <button class="btn btn-primary" type="submit">Continue</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <footer class="footer">
+        <span>Player: ${escapeHtml(state.playerName)}</span>
+      </footer>
+    </div>
+  `;
+  document.querySelector("[data-back]")?.addEventListener("pointerdown", goEnterName);
+  attachFormSubmit("[data-form=emp]", (fd) => {
+    const id = String(fd.get("employeeId") || "").trim();
+    const err = validateEmployeeId(id);
+    if (err) {
+      state.formError = err;
+      state.employeeId = id;
+      render();
+      return;
+    }
+    state.employeeId = id;
+    goRules();
+  });
+}
+
+function renderRules() {
+  const pts = sectionPoints();
+  const maxScore = roundsPerGame() * pts * 2;
+  const wordSec = cfg.wordFindSeconds ?? 20;
+  $app.innerHTML = `
+    <div class="screen">
+      ${renderHeader("PhonePe Integrity", "Game Rules", renderFlowStep(3, 4, "How to Play"))}
+      <div class="screen-body rules-body">
+        <div class="card card-sm rules-panel">
+          <h2 class="form-title">Word of Honor</h2>
+          <p class="form-lead">
+            Welcome! Test your knowledge, sharp eyes, and speed across
+            <strong>4 interactive rounds</strong>.
+          </p>
+          <ol class="rules-flow">
+            <li>Select the correct answer to unlock <strong>Find the word</strong> for Question 1.</li>
+            <li>Find the hidden integrity keyword on the touch screen to earn extra points.</li>
+            <li>Answer Question 2 — wrong answer on the final question ends the game.</li>
+            <li>Locate the final keyword to maximize your total score.</li>
+          </ol>
+          <div class="rules-grid">
+            <div class="rules-box">
+              <div class="rules-box-title">Scoring</div>
+              <p>Each correct section awards <strong>${pts} points</strong> (max ${maxScore}).</p>
+              <ul class="rules-mini">
+                <li>0 pts — Oops!</li>
+                <li>25 pts — Not bad!</li>
+                <li>50 pts — Good Job!</li>
+                <li>75 pts — Great job!</li>
+                <li>100 pts — Flawless, perfect score!</li>
+              </ul>
+            </div>
+            <div class="rules-box">
+              <div class="rules-box-title">Progression</div>
+              <ul class="rules-mini">
+                <li>Wrong Question 1 → skip word search, go to Question 2</li>
+                <li>Wrong final question → game over</li>
+                <li>Wrong keyword or timeout → 0 pts for that section</li>
+                <li>${wordSec}s per word search · horizontal & vertical only</li>
+              </ul>
+            </div>
+          </div>
+          <button class="btn btn-primary" data-continue>I Understand — Continue</button>
+        </div>
+      </div>
+      <footer class="footer">
+        <span>${escapeHtml(state.playerName)} · ${escapeHtml(state.employeeId)}</span>
+      </footer>
+    </div>
+  `;
+  document.querySelector("[data-continue]")?.addEventListener("pointerdown", goReady);
+}
+
+function renderStart() {
+  const pts = sectionPoints();
+  const maxScore = roundsPerGame() * pts * 2;
+  const total = roundsPerGame();
+  $app.innerHTML = `
+    <div class="screen">
+      ${renderHeader("PhonePe Integrity", "Start Game", `${renderFlowStep(4, 4, "Ready")} ${playerChip()}`)}
       <div class="start-hero">
-        <h1>Word of <span>Honor</span></h1>
+        <h1>Ready to play, <span>${escapeHtml(state.playerName)}</span>?</h1>
         <p class="lead">
-          Test your knowledge, sharp eyes, and speed across <strong>4 interactive rounds</strong>.
-          Each correct section awards <strong>${pts} points</strong> for a maximum score of
-          <strong>${maxScore} points</strong>.
+          You will answer <strong>${total} questions</strong> and find the keyword after each correct answer.
+          Maximum score: <strong>${maxScore} points</strong>.
         </p>
         <div class="steps">
           <div class="step">
-            <div class="step-num">1</div>
-            <div class="step-title">Round 1 · MCQ 1</div>
-            <div class="step-desc">Select the correct answer to unlock Keyword Game 1 · +${pts} pts</div>
+            <div class="step-num">5</div>
+            <div class="step-title">Question 1</div>
+            <div class="step-desc">Answer the question · +${pts} pts if correct</div>
           </div>
           <div class="step">
-            <div class="step-num">2</div>
-            <div class="step-title">Round 2 · Keyword Game 1</div>
-            <div class="step-desc">Find the hidden integrity keyword · ${wordSec}s · H/V only · +${pts} pts</div>
+            <div class="step-num">6</div>
+            <div class="step-title">Find the word</div>
+            <div class="step-desc">Locate the integrity keyword · +${pts} pts</div>
           </div>
           <div class="step">
-            <div class="step-num">3</div>
-            <div class="step-title">Round 3 · MCQ 2</div>
-            <div class="step-desc">Wrong answer ends the game · correct unlocks Keyword Game 2 · +${pts} pts</div>
-          </div>
-          <div class="step">
-            <div class="step-num">4</div>
-            <div class="step-title">Round 4 · Keyword Game 2</div>
-            <div class="step-desc">Locate the final keyword · max score ${maxScore} pts — Flawless!</div>
+            <div class="step-num">7</div>
+            <div class="step-title">And so on…</div>
+            <div class="step-desc">Repeat for Question 2 until the game ends</div>
           </div>
         </div>
-        <button class="btn btn-primary" data-start>Tap to Start</button>
+        <button class="btn btn-primary" data-start>Start Game</button>
       </div>
       <footer class="footer">
-        <span>Touch-only Integrity campaign game</span>
-        <span>4 interactive rounds · puzzle layout jumbled per player</span>
+        <span>Employee ID: ${escapeHtml(state.employeeId)}</span>
+        <span>Tap Start Game when ready</span>
       </footer>
     </div>
   `;
@@ -875,6 +1075,7 @@ function renderStart() {
 
 function renderQuiz() {
   const q = activeQuestion();
+  const total = state.roundQuestions.length;
   const reveal = state.quizReveal;
   const shuffled = ensureShuffledQuiz();
   const opts = shuffled.options
@@ -893,19 +1094,17 @@ function renderQuiz() {
     })
     .join("");
 
-  const roundNum = currentInteractiveRound();
-  const roundTotal = interactiveRoundTotal();
-  const mcqLabel = state.questionIndex === 0 ? "MCQ 1" : "MCQ 2";
+  const qLabel = questionLabel(state.questionIndex);
   $app.innerHTML = `
     <div class="screen">
       ${renderHeader(
-        `Round ${roundNum} · ${mcqLabel}`,
-        `${interactiveRoundLabel(roundNum)} · Round ${roundNum} of ${roundTotal}`,
-        `<span class="chip chip-strong">Score: ${displayScore()}</span>`,
+        qLabel,
+        "Answer the question",
+        `<span class="chip chip-strong">Score: ${displayScore()}</span> ${playerChip()}`,
       )}
       <div class="screen-body quiz-body">
         <div class="card card-sm quiz-card">
-          <div class="section-label">${escapeHtml(q.allegation || "Integrity")} · ${mcqLabel}</div>
+          <div class="section-label">${escapeHtml(q.allegation || "Integrity")} · ${qLabel}</div>
           <h2 class="quiz-question">${escapeHtml(q.clue)}</h2>
           <p class="quiz-hint">${
             reveal
@@ -918,8 +1117,8 @@ function renderQuiz() {
         </div>
       </div>
       <footer class="footer">
-        <span>${state.questionIndex === 0 ? "Wrong answer skips Keyword Game 1" : "Wrong answer ends the game"}</span>
-        <span>Correct answer unlocks Keyword Game ${state.questionIndex + 1}</span>
+        <span>${isFinalMcqRound() ? "Wrong answer ends the game" : "Wrong answer skips Find the word"}</span>
+        <span>Correct answer unlocks Find the word · ${state.questionIndex + 1} of ${total}</span>
       </footer>
       ${renderFeedback()}
     </div>
@@ -939,18 +1138,16 @@ function renderWordFind() {
   const answerLabel = getAnswerLabel(q);
   const totalMs = (cfg.wordFindSeconds ?? 20) * 1000;
   const pts = sectionPoints();
-  const roundNum = currentInteractiveRound();
-  const roundTotal = interactiveRoundTotal();
-  const kwLabel = state.questionIndex === 0 ? "Keyword Game 1" : "Keyword Game 2";
+  const kwLabel = wordFindLabel(state.questionIndex);
   const keywordCount = state.gridData?.words?.length ?? state.roundQuestions.length;
   const gridHtml = buildGridHtml(state.gridData, !state.revealTarget);
 
   $app.innerHTML = `
     <div class="screen">
       ${renderHeader(
-        `Round ${roundNum} · ${kwLabel}`,
-        `${interactiveRoundLabel(roundNum)} · Round ${roundNum} of ${roundTotal}`,
-        `<span class="chip chip-strong">Score: ${displayScore()}</span>`,
+        kwLabel,
+        questionLabel(state.questionIndex),
+        `<span class="chip chip-strong">Score: ${displayScore()}</span> ${playerChip()}`,
       )}
       <div class="screen-body">
         <div class="play-layout wordfind-layout">
@@ -1003,14 +1200,14 @@ function renderEnd() {
   const rows = state.roundScores
     .map((r, i) => {
       const q = state.roundQuestions[i];
-      const mcq = i === 0 ? "MCQ 1" : "MCQ 2";
-      const kw = i === 0 ? "Keyword 1" : "Keyword 2";
+      const qName = questionLabel(i);
+      const kwName = "Find the word";
       return `
         <div class="score-row">
-          <div class="score-q">${mcq}: ${escapeHtml(q.allegation || q.clue)}</div>
+          <div class="score-q">${qName}: ${escapeHtml(q.allegation || q.clue)}</div>
           <div class="score-detail">
-            ${mcq}: ${r.quizCorrect ? `+${r.quiz}` : "0"}
-            · ${kw}: ${r.keywordSkipped ? "NA" : r.quizCorrect ? (r.word > 0 ? `+${r.word}` : "0") : "NA"}
+            ${qName}: ${r.quizCorrect ? `+${r.quiz}` : "0"}
+            · ${kwName}: ${r.keywordSkipped ? "NA" : r.quizCorrect ? (r.word > 0 ? `+${r.word}` : "0") : "NA"}
             · <strong>${r.total} pts</strong>
           </div>
         </div>`;
@@ -1022,10 +1219,11 @@ function renderEnd() {
       ${renderHeader(
         "Game Over",
         feedback,
-        `<span class="chip">Resets in ~${left}s</span>`,
+        `<span class="chip">Resets in ~${left}s</span> ${playerChip()}`,
       )}
       <div class="screen-body">
         <div class="end-score-card card">
+          <div class="player-recap">${escapeHtml(state.playerName)} · ${escapeHtml(state.employeeId)}</div>
           <div class="final-score">${state.totalScore}</div>
           <div class="final-score-label">out of ${maxScore} points</div>
           <div class="end-feedback">${escapeHtml(feedback)}</div>
@@ -1039,11 +1237,14 @@ function renderEnd() {
       </footer>
     </div>
   `;
-  document.querySelector("[data-new]")?.addEventListener("pointerdown", () => startGame());
+  document.querySelector("[data-new]")?.addEventListener("pointerdown", () => goReady());
 }
 
 function render() {
   if (!cfg) return;
+  if (state.screen === Screen.ENTER_NAME) return renderEnterName();
+  if (state.screen === Screen.ENTER_EMP_ID) return renderEnterEmpId();
+  if (state.screen === Screen.RULES) return renderRules();
   if (state.screen === Screen.START) return renderStart();
   if (state.screen === Screen.QUIZ) return renderQuiz();
   if (state.screen === Screen.WORDFIND) return renderWordFind();
