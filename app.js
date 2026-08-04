@@ -105,8 +105,24 @@ function normalizeAnswer(s) {
     .replace(/[^A-Z0-9]/g, "");
 }
 
-function halfPoints(full) {
-  return Math.round(full / 2);
+/** End-screen message per Game Rules point matrix (0 / 25 / 50 / 75 / 100). */
+function getScoreFeedback(total) {
+  const table = cfg.scoreFeedback ?? {
+    0: "Oops!",
+    25: "Not bad!",
+    50: "Good Job!",
+    75: "Great job!",
+    100: "Flawless, perfect score!",
+  };
+  return table[total] ?? table[String(total)] ?? "Thanks for playing!";
+}
+
+function sectionPoints() {
+  return cfg.sectionPoints ?? cfg.quizPoints ?? 25;
+}
+
+function isFinalMcqRound() {
+  return state.questionIndex >= state.roundQuestions.length - 1;
 }
 
 /** Excel A/B plus question-specific third wrong option (optionC). */
@@ -374,7 +390,7 @@ function activeQuestion() {
 }
 
 function roundsPerGame() {
-  return Math.min(cfg.roundsPerGame ?? 3, cfg.questions.length);
+  return Math.min(cfg.roundsPerGame ?? 2, cfg.questions.length);
 }
 
 function clearGridHandlers() {
@@ -476,20 +492,25 @@ async function answerQuiz(optionIndex) {
 
   const shuffled = ensureShuffledQuiz();
   const correct = optionIndex === shuffled.correctIndex;
-  const quizPts = correct ? (cfg.quizPoints ?? 10) : 0;
+  const pts = sectionPoints();
+  const quizPts = correct ? pts : 0;
   const correctLabel = shuffled.options[shuffled.correctIndex];
+  const mcqLabel = state.questionIndex === 0 ? "MCQ 1" : "MCQ 2";
 
-  state.currentRound = { quiz: quizPts, word: 0, quizCorrect: correct };
+  state.currentRound = { quiz: quizPts, word: 0, quizCorrect: correct, keywordSkipped: !correct };
   state.quizReveal = { picked: optionIndex, correct: shuffled.correctIndex };
 
   if (!correct) {
     beep("bad");
+    const nextHint = isFinalMcqRound()
+      ? "Game over — see your score"
+      : "Keyword game skipped — moving to Round 2";
     state.feedback = {
       type: "bad",
-      text: `Incorrect — correct answer: ${correctLabel}`,
+      text: `${mcqLabel} incorrect — correct answer: ${correctLabel}. ${nextHint}`,
     };
     render();
-    await delay(2600);
+    await delay(isFinalMcqRound() ? 2800 : 2600);
     state.feedback = null;
     state.quizReveal = null;
     state.shuffledQuiz = null;
@@ -498,7 +519,8 @@ async function answerQuiz(optionIndex) {
   }
 
   beep("good");
-  state.feedback = { type: "good", text: `Correct! +${quizPts} points — find the keyword` };
+  const kwLabel = state.questionIndex === 0 ? "Keyword Game 1" : "Keyword Game 2";
+  state.feedback = { type: "good", text: `${mcqLabel} correct! +${quizPts} pts — unlock ${kwLabel}` };
   render();
   await delay(1100);
   if (state.screen !== Screen.QUIZ) return;
@@ -550,8 +572,7 @@ async function onWordSelected(matchIdx) {
   if (state.screen !== Screen.WORDFIND || state.locked) return;
   state.locked = true;
 
-  const full = cfg.wordPoints ?? 10;
-  const quizPts = state.currentRound.quiz ?? 0;
+  const full = sectionPoints();
   const label = getCategoryLabel(activeQuestion());
 
   if (matchIdx === 0) {
@@ -559,7 +580,7 @@ async function onWordSelected(matchIdx) {
     beep("good");
     state.currentRound.word = full;
     state.revealTarget = true;
-    state.feedback = { type: "good", text: `Keyword found! +${full} points` };
+    state.feedback = { type: "good", text: `Keyword found! +${full} pts` };
     render();
     paintTargetReveal();
     document.querySelectorAll(".cell.reveal").forEach((el) => {
@@ -577,10 +598,9 @@ async function onWordSelected(matchIdx) {
   if (matchIdx > 0) {
     clearTimers();
     beep("bad");
-    const halfTotal = halfPoints(quizPts + full);
-    state.currentRound.word = Math.max(0, halfTotal - quizPts);
+    state.currentRound.word = 0;
     await revealKeywordThenFinish(
-      `Wrong keyword — half points (+${halfTotal}). Correct: ${label}`,
+      `Wrong keyword — no points for this section. Correct: ${label}`,
       "warn",
       3000,
     );
@@ -787,43 +807,45 @@ function buildGridHtml(gridData, interactive = true) {
 
 function renderStart() {
   const wordSec = cfg.wordFindSeconds ?? 20;
-  const quizPts = cfg.quizPoints ?? 10;
-  const wordPts = cfg.wordPoints ?? 10;
-  const roundCount = roundsPerGame();
-  const bankSize = cfg.questions.length;
+  const pts = sectionPoints();
+  const maxScore = roundsPerGame() * pts * 2;
   $app.innerHTML = `
     <div class="screen">
-      ${renderHeader("PhonePe Integrity", "Quiz + Find the Word", `<span class="chip">${cfg.kioskResolution ?? "1920×1080"}</span>`)}
+      ${renderHeader("PhonePe Integrity", "Word of Honor", `<span class="chip">${cfg.kioskResolution ?? "1920×1080"}</span>`)}
       <div class="start-hero">
-        <h1>Integrity <span>Challenge</span></h1>
+        <h1>Word of <span>Honor</span></h1>
         <p class="lead">
-          Answer <strong>${roundCount} questions</strong> from the Ethics bank (${bankSize} total).
-          Each quiz shows <strong>3 jumbled options</strong> — the correct answer can be A, B, or C.
-          If correct, find that question’s <strong>keyword</strong> in a crossword that hides
-          <strong>all ${roundCount} keywords</strong> (layout jumbled per player).
+          Test your knowledge, sharp eyes, and speed across <strong>4 interactive rounds</strong>.
+          Each correct section awards <strong>${pts} points</strong> for a maximum score of
+          <strong>${maxScore} points</strong>.
         </p>
         <div class="steps">
           <div class="step">
             <div class="step-num">1</div>
-            <div class="step-title">Answer the quiz</div>
-            <div class="step-desc">Pick A, B, or C · +${quizPts} pts if right</div>
+            <div class="step-title">MCQ 1 → Keyword Game 1</div>
+            <div class="step-desc">Correct answer unlocks the first keyword · +${pts} pts each</div>
           </div>
           <div class="step">
             <div class="step-num">2</div>
-            <div class="step-title">Find the keyword</div>
-            <div class="step-desc">${wordSec}s · H/V only · +${wordPts} pts</div>
+            <div class="step-title">Wrong MCQ 1?</div>
+            <div class="step-desc">Keyword Game 1 skipped — you move straight to Round 2</div>
           </div>
           <div class="step">
             <div class="step-num">3</div>
-            <div class="step-title">${roundCount} rounds</div>
-            <div class="step-desc">Wrong keyword = half points · Wrong quiz = skip puzzle</div>
+            <div class="step-title">MCQ 2 → Keyword Game 2</div>
+            <div class="step-desc">Wrong MCQ 2 ends the game · Find keywords in ${wordSec}s (H/V only)</div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-title">Maximize your score</div>
+            <div class="step-desc">Locate the final keyword to reach ${maxScore} pts — Flawless!</div>
           </div>
         </div>
         <button class="btn btn-primary" data-start>Tap to Start</button>
       </div>
       <footer class="footer">
         <span>Touch-only Integrity campaign game</span>
-        <span>10 puzzle variants · keywords jumbled per player</span>
+        <span>2 quiz rounds + 2 keyword games · puzzle layout jumbled per player</span>
       </footer>
     </div>
   `;
@@ -856,11 +878,12 @@ function renderQuiz() {
     })
     .join("");
 
+  const mcqLabel = state.questionIndex === 0 ? "MCQ 1" : "MCQ 2";
   $app.innerHTML = `
     <div class="screen">
       ${renderHeader(
-        "Quiz Round",
-        `Question ${state.questionIndex + 1} of ${total}`,
+        mcqLabel,
+        `Round ${state.questionIndex + 1} of ${total}`,
         `<span class="chip chip-strong">Score: ${displayScore()}</span>`,
       )}
       <div class="screen-body quiz-body">
@@ -878,8 +901,8 @@ function renderQuiz() {
         </div>
       </div>
       <footer class="footer">
-        <span>Wrong answer moves to next question</span>
-        <span>Correct answer unlocks Find the Keyword</span>
+        <span>${state.questionIndex === 0 ? "Wrong answer skips Keyword Game 1" : "Wrong answer ends the game"}</span>
+        <span>Correct answer unlocks Keyword Game ${state.questionIndex + 1}</span>
       </footer>
       ${renderFeedback()}
     </div>
@@ -898,15 +921,16 @@ function renderWordFind() {
   const categoryWord = getCategoryWord(q);
   const answerLabel = getAnswerLabel(q);
   const totalMs = (cfg.wordFindSeconds ?? 20) * 1000;
-  const half = halfPoints((cfg.quizPoints ?? 10) + (cfg.wordPoints ?? 10));
+  const pts = sectionPoints();
+  const kwLabel = state.questionIndex === 0 ? "Keyword Game 1" : "Keyword Game 2";
   const keywordCount = state.gridData?.words?.length ?? state.roundQuestions.length;
   const gridHtml = buildGridHtml(state.gridData, !state.revealTarget);
 
   $app.innerHTML = `
     <div class="screen">
       ${renderHeader(
-        "Find the Keyword",
-        `Round ${state.questionIndex + 1} · Puzzle #${state.puzzleVariant + 1}`,
+        kwLabel,
+        `Find the hidden integrity keyword · Puzzle #${state.puzzleVariant + 1}`,
         `<span class="chip chip-strong">Score: ${displayScore()}</span>`,
       )}
       <div class="screen-body">
@@ -927,10 +951,10 @@ function renderWordFind() {
             <div class="section-label">Rules</div>
             <ul class="rules-list">
               <li>Find this question’s <strong>keyword</strong> (not the quiz option text)</li>
-              <li>All <strong>${keywordCount} keywords</strong> from this game are in the crossword</li>
-              <li>Correct keyword → <strong>+${cfg.wordPoints ?? 10} pts</strong></li>
-              <li>Wrong keyword → <strong>half points only</strong> (~${half} total)</li>
-              <li>Time runs out → no word points</li>
+              <li>Both game keywords are hidden in the crossword (jumbled layout)</li>
+              <li>Correct keyword → <strong>+${pts} pts</strong></li>
+              <li>Wrong keyword or timeout → <strong>0 pts</strong> for this section</li>
+              <li>Each correct section awards <strong>${pts} pts</strong> (max ${roundsPerGame() * pts * 2})</li>
             </ul>
             <div class="quiz-recap">
               <div class="section-label">You answered</div>
@@ -952,22 +976,22 @@ function renderWordFind() {
 }
 
 function renderEnd() {
-  const maxScore = state.roundScores.reduce((sum, r) => {
-    const quizMax = cfg.quizPoints ?? 10;
-    const wordMax = r.quizCorrect ? (cfg.wordPoints ?? 10) : 0;
-    return sum + quizMax + wordMax;
-  }, 0) || roundsPerGame() * ((cfg.quizPoints ?? 10) + (cfg.wordPoints ?? 10));
+  const pts = sectionPoints();
+  const maxScore = roundsPerGame() * pts * 2;
+  const feedback = getScoreFeedback(state.totalScore);
   const left = cfg.idleResetSeconds ?? 10;
 
   const rows = state.roundScores
     .map((r, i) => {
       const q = state.roundQuestions[i];
+      const mcq = i === 0 ? "MCQ 1" : "MCQ 2";
+      const kw = i === 0 ? "Keyword 1" : "Keyword 2";
       return `
         <div class="score-row">
-          <div class="score-q">Q${i + 1}: ${escapeHtml(q.allegation || q.clue)}</div>
+          <div class="score-q">${mcq}: ${escapeHtml(q.allegation || q.clue)}</div>
           <div class="score-detail">
-            Quiz: ${r.quizCorrect ? `+${r.quiz}` : "0"}
-            ${r.quizCorrect ? ` · Category: +${r.word}` : " (skipped)"}
+            ${mcq}: ${r.quizCorrect ? `+${r.quiz}` : "0"}
+            · ${kw}: ${r.keywordSkipped ? "NA" : r.quizCorrect ? (r.word > 0 ? `+${r.word}` : "0") : "NA"}
             · <strong>${r.total} pts</strong>
           </div>
         </div>`;
@@ -978,13 +1002,14 @@ function renderEnd() {
     <div class="screen">
       ${renderHeader(
         "Game Over",
-        "Your final score",
+        feedback,
         `<span class="chip">Resets in ~${left}s</span>`,
       )}
       <div class="screen-body">
         <div class="end-score-card card">
           <div class="final-score">${state.totalScore}</div>
           <div class="final-score-label">out of ${maxScore} points</div>
+          <div class="end-feedback">${escapeHtml(feedback)}</div>
           <div class="score-breakdown">${rows}</div>
           <button class="btn btn-primary" data-new>Play Again</button>
         </div>

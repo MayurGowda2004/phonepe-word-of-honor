@@ -164,14 +164,22 @@ def main():
     cfg = {
         "orientation": "landscape",
         "kioskResolution": "1920x1080",
-        "roundsPerGame": 10,
+        "roundsPerGame": 2,
         "wordFindSeconds": 20,
         "idleResetSeconds": 10,
-        "quizPoints": 10,
-        "wordPoints": 10,
+        "sectionPoints": 25,
+        "quizPoints": 25,
+        "wordPoints": 25,
+        "scoreFeedback": {
+            "0": "Oops!",
+            "25": "Not bad!",
+            "50": "Good Job!",
+            "75": "Great job!",
+            "100": "Flawless, perfect score!",
+        },
         "puzzleVariants": 10,
         "decoyWords": decoys,
-        "grid": {"minSize": 16, "maxSize": max(24, longest + 2)},
+        "grid": {"minSize": 12, "maxSize": max(20, longest + 2)},
         "questions": questions,
     }
     OUT.write_text(json.dumps(cfg, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

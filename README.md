@@ -1,34 +1,49 @@
-# PhonePe Integrity Kiosk — Quiz + Find the Keyword
+# PhonePe Integrity Kiosk — Word of Honor
 
-Touch-screen Integrity campaign game built from client **Game Rules** and **Final Questions** Excel.
+Touch-screen Integrity campaign game per **Game Rules - Digital Game.docx** and **Final Questions** Excel.
 
-## Game flow
-1. Each player gets **10 random questions** from the 100-question bank.
-2. Quiz shows **Option A**, **Option B** (from Excel) plus a generic **Option C** (`None of the above / Not sure`).
-3. **Correct quiz** → find that question’s **Keyword** (Excel Keyword column) in the crossword.
-4. Crossword hides **all 10 keywords** for that player’s questions (layout **jumbled per player / variant**).
-5. Words are **horizontal & vertical only** (no diagonals).
-6. **Wrong quiz** → skip puzzle, next question.
-7. **Wrong keyword** → half points for that round.
-8. **20 seconds** per keyword search.
+## Game flow (4 interactive rounds)
+1. **MCQ 1** — Select the correct answer to unlock **Keyword Game 1** (+25 pts).
+2. **Keyword Game 1** — Find the hidden integrity keyword on the touch screen (+25 pts).
+3. **MCQ 2** — Choose the correct answer to unlock **Keyword Game 2** (+25 pts).
+4. **Keyword Game 2** — Locate the final keyword to maximize your score (+25 pts).
 
-## Scoring
-| Action | Points |
-|---|---|
-| Correct quiz | 10 |
-| Find correct keyword | 10 |
-| Correct quiz + wrong keyword | half of round total |
-| Wrong quiz / timeout | 0 for skipped / word portion |
+### Progression rules
+- Wrong **MCQ 1** → skip Keyword Game 1, move straight to Round 2 (MCQ 2).
+- Wrong **MCQ 2** → game over.
+- Wrong keyword or timeout → 0 pts for that section; game continues if allowed.
+
+## Scoring (max 100 points)
+| Total | End screen message |
+|-------|-------------------|
+| 0 | Oops! |
+| 25 | Not bad! |
+| 50 | Good Job! |
+| 75 | Great job! |
+| 100 | Flawless, perfect score! |
+
+Each correct MCQ or keyword section awards **25 points**.
 
 ## Content source
-- File: `Final Questions - (Digital Game).xlsx`
+- Rules: `Game Rules - Digital Game.docx`
+- Questions: `Final Questions - (Digital Game).xlsx`
 - Columns used: Question, Option A, Option B, Correct Option, Keyword
 - Re-import: `python scripts/import_questions.py`
 
-## Run
+## Run locally
 
 ```powershell
 python -m http.server 5173
 ```
 
 Open http://localhost:5173 — add `?kiosk=1` for kiosk hardening.
+
+Or run `.\start-kiosk.ps1` to launch Edge in kiosk mode.
+
+## Deploy (Vercel)
+
+```powershell
+npx vercel deploy --prod
+```
+
+GitHub Actions deploys on push to `main`/`master` when `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` secrets are valid.
