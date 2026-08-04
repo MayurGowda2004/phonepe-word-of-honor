@@ -3,10 +3,10 @@
 Touch-screen Integrity campaign game per **Game Rules - Digital Game.docx** and **Final Questions** Excel.
 
 ## Game flow (4 interactive rounds)
-1. **MCQ 1** — Select the correct answer to unlock **Keyword Game 1** (+25 pts).
-2. **Keyword Game 1** — Find the hidden integrity keyword on the touch screen (+25 pts).
-3. **MCQ 2** — Choose the correct answer to unlock **Keyword Game 2** (+25 pts).
-4. **Keyword Game 2** — Locate the final keyword to maximize your score (+25 pts).
+1. **Round 1 · MCQ 1** — Select the correct answer to unlock Keyword Game 1 (+25 pts).
+2. **Round 2 · Keyword Game 1** — Find the hidden integrity keyword (+25 pts).
+3. **Round 3 · MCQ 2** — Choose the correct answer to unlock Keyword Game 2 (+25 pts).
+4. **Round 4 · Keyword Game 2** — Locate the final keyword (+25 pts).
 
 ### Progression rules
 - Wrong **MCQ 1** → skip Keyword Game 1, move straight to Round 2 (MCQ 2).

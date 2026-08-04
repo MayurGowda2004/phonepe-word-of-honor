@@ -393,6 +393,22 @@ function roundsPerGame() {
   return Math.min(cfg.roundsPerGame ?? 2, cfg.questions.length);
 }
 
+/** Game Rules: 4 interactive rounds = 2 MCQs + 2 keyword games. */
+function interactiveRoundTotal() {
+  return cfg.interactiveRounds ?? roundsPerGame() * 2;
+}
+
+function currentInteractiveRound() {
+  if (state.screen === Screen.QUIZ) return state.questionIndex * 2 + 1;
+  if (state.screen === Screen.WORDFIND) return state.questionIndex * 2 + 2;
+  return 0;
+}
+
+function interactiveRoundLabel(n) {
+  const labels = ["MCQ 1", "Keyword Game 1", "MCQ 2", "Keyword Game 2"];
+  return labels[n - 1] ?? `Round ${n}`;
+}
+
 function clearGridHandlers() {
   if (gridAbort) {
     gridAbort.abort();
@@ -504,7 +520,7 @@ async function answerQuiz(optionIndex) {
     beep("bad");
     const nextHint = isFinalMcqRound()
       ? "Game over — see your score"
-      : "Keyword game skipped — moving to Round 2";
+      : "Keyword game skipped — moving to Round 3 (MCQ 2)";
     state.feedback = {
       type: "bad",
       text: `${mcqLabel} incorrect — correct answer: ${correctLabel}. ${nextHint}`,
@@ -822,30 +838,30 @@ function renderStart() {
         <div class="steps">
           <div class="step">
             <div class="step-num">1</div>
-            <div class="step-title">MCQ 1 → Keyword Game 1</div>
-            <div class="step-desc">Correct answer unlocks the first keyword · +${pts} pts each</div>
+            <div class="step-title">Round 1 · MCQ 1</div>
+            <div class="step-desc">Select the correct answer to unlock Keyword Game 1 · +${pts} pts</div>
           </div>
           <div class="step">
             <div class="step-num">2</div>
-            <div class="step-title">Wrong MCQ 1?</div>
-            <div class="step-desc">Keyword Game 1 skipped — you move straight to Round 2</div>
+            <div class="step-title">Round 2 · Keyword Game 1</div>
+            <div class="step-desc">Find the hidden integrity keyword · ${wordSec}s · H/V only · +${pts} pts</div>
           </div>
           <div class="step">
             <div class="step-num">3</div>
-            <div class="step-title">MCQ 2 → Keyword Game 2</div>
-            <div class="step-desc">Wrong MCQ 2 ends the game · Find keywords in ${wordSec}s (H/V only)</div>
+            <div class="step-title">Round 3 · MCQ 2</div>
+            <div class="step-desc">Wrong answer ends the game · correct unlocks Keyword Game 2 · +${pts} pts</div>
           </div>
           <div class="step">
             <div class="step-num">4</div>
-            <div class="step-title">Maximize your score</div>
-            <div class="step-desc">Locate the final keyword to reach ${maxScore} pts — Flawless!</div>
+            <div class="step-title">Round 4 · Keyword Game 2</div>
+            <div class="step-desc">Locate the final keyword · max score ${maxScore} pts — Flawless!</div>
           </div>
         </div>
         <button class="btn btn-primary" data-start>Tap to Start</button>
       </div>
       <footer class="footer">
         <span>Touch-only Integrity campaign game</span>
-        <span>2 quiz rounds + 2 keyword games · puzzle layout jumbled per player</span>
+        <span>4 interactive rounds · puzzle layout jumbled per player</span>
       </footer>
     </div>
   `;
@@ -859,7 +875,6 @@ function renderStart() {
 
 function renderQuiz() {
   const q = activeQuestion();
-  const total = state.roundQuestions.length;
   const reveal = state.quizReveal;
   const shuffled = ensureShuffledQuiz();
   const opts = shuffled.options
@@ -878,17 +893,19 @@ function renderQuiz() {
     })
     .join("");
 
+  const roundNum = currentInteractiveRound();
+  const roundTotal = interactiveRoundTotal();
   const mcqLabel = state.questionIndex === 0 ? "MCQ 1" : "MCQ 2";
   $app.innerHTML = `
     <div class="screen">
       ${renderHeader(
-        mcqLabel,
-        `Round ${state.questionIndex + 1} of ${total}`,
+        `Round ${roundNum} · ${mcqLabel}`,
+        `${interactiveRoundLabel(roundNum)} · Round ${roundNum} of ${roundTotal}`,
         `<span class="chip chip-strong">Score: ${displayScore()}</span>`,
       )}
       <div class="screen-body quiz-body">
         <div class="card card-sm quiz-card">
-          <div class="section-label">${escapeHtml(q.allegation || "Integrity")} · Round ${state.questionIndex + 1}</div>
+          <div class="section-label">${escapeHtml(q.allegation || "Integrity")} · ${mcqLabel}</div>
           <h2 class="quiz-question">${escapeHtml(q.clue)}</h2>
           <p class="quiz-hint">${
             reveal
@@ -922,6 +939,8 @@ function renderWordFind() {
   const answerLabel = getAnswerLabel(q);
   const totalMs = (cfg.wordFindSeconds ?? 20) * 1000;
   const pts = sectionPoints();
+  const roundNum = currentInteractiveRound();
+  const roundTotal = interactiveRoundTotal();
   const kwLabel = state.questionIndex === 0 ? "Keyword Game 1" : "Keyword Game 2";
   const keywordCount = state.gridData?.words?.length ?? state.roundQuestions.length;
   const gridHtml = buildGridHtml(state.gridData, !state.revealTarget);
@@ -929,8 +948,8 @@ function renderWordFind() {
   $app.innerHTML = `
     <div class="screen">
       ${renderHeader(
-        kwLabel,
-        `Find the hidden integrity keyword · Puzzle #${state.puzzleVariant + 1}`,
+        `Round ${roundNum} · ${kwLabel}`,
+        `${interactiveRoundLabel(roundNum)} · Round ${roundNum} of ${roundTotal}`,
         `<span class="chip chip-strong">Score: ${displayScore()}</span>`,
       )}
       <div class="screen-body">
