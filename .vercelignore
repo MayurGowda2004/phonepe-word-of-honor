@@ -1,0 +1,7 @@
+PhonePe integrity/**
+*.ai
+*.pdf
+*.docx
+*.xlsx
+.github/**
+.git/**
