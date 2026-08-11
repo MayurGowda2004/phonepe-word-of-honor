@@ -35,7 +35,7 @@ Each correct MCQ or keyword section awards **25 points**.
 
 ## Content source
 - Rules: `Game Rules - Digital Game.docx`
-- Questions: `Final Questions - (Digital Game).xlsx`
+- Questions: `Digital Game_2026_Qs and Keyword.xlsx`
 - Columns used: Question, Option A, Option B, Correct Option, Keyword
 - Re-import: `python scripts/import_questions.py`
 

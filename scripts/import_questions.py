@@ -5,13 +5,14 @@ import zipfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-XLSX = Path(r"c:\Users\spark\Downloads\Final Questions - (Digital Game).xlsx")
+XLSX = Path(__file__).resolve().parents[1] / "Digital Game_2026_Qs and Keyword.xlsx"
 OUT = Path(__file__).resolve().parents[1] / "questions.json"
 NS = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
 
 # Plausible wrong answers per topic when no cross-question distractor is available.
 TOPIC_FALLBACK_C = {
     "Alcohol and Drug": "One drink is fine if the team agrees informally.",
+    "AML": "Process the transaction if the amount looks small.",
     "AML / Sanctions": "Process the transaction if the amount looks small.",
     "Antitrust": "Share pricing details privately with the competitor to stay competitive.",
     "Bribery": "Approve the payment to avoid delaying the project.",
