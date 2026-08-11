@@ -55,4 +55,6 @@ Or run `.\start-kiosk.ps1` to launch Edge in kiosk mode.
 npx vercel deploy --prod
 ```
 
+Live site: **https://phonepe-integrity.vercel.app**
+
 GitHub Actions deploys on push to `main`/`master` when `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` secrets are valid.
