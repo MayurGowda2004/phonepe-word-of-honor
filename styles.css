@@ -1243,7 +1243,11 @@ button {
   z-index: 120;
   display: grid;
   place-items: center;
+  place-content: center;
   pointer-events: none;
+  background: rgba(18, 6, 40, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   animation: ptsStageIn 0.35s ease-out both;
 }
 
@@ -1252,7 +1256,7 @@ button {
   width: 12px;
   height: 12px;
   left: 50%;
-  top: 42%;
+  top: 46%;
   transform: translate(-50%, -50%);
 }
 
@@ -1260,30 +1264,31 @@ button {
   position: absolute;
   left: 0;
   top: 0;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 999px;
-  background: var(--pp-yellow);
-  box-shadow: 0 0 12px rgba(245, 197, 24, 0.75);
-  animation: ptsSpark 0.9s var(--d, 0.4s) ease-out both;
+  background: #ffd84a;
+  border: 2px solid #fff;
+  box-shadow: 0 0 16px rgba(255, 216, 74, 0.95);
+  animation: ptsSpark 0.95s var(--d, 0.4s) ease-out both;
   transform: rotate(var(--a)) translateY(0) scale(0.4);
 }
 
 .pts-spark:nth-child(3n + 1) {
-  background: var(--pp-cyan);
-  box-shadow: 0 0 12px rgba(46, 196, 255, 0.7);
-  width: 8px;
-  height: 8px;
+  background: #2ec4ff;
+  box-shadow: 0 0 16px rgba(46, 196, 255, 0.95);
+  width: 10px;
+  height: 10px;
 }
 .pts-spark:nth-child(3n + 2) {
-  background: var(--pp-green);
-  box-shadow: 0 0 12px rgba(46, 204, 113, 0.7);
-  width: 12px;
-  height: 12px;
+  background: #2ecc71;
+  box-shadow: 0 0 16px rgba(46, 204, 113, 0.95);
+  width: 14px;
+  height: 14px;
 }
 .pts-spark:nth-child(3n) {
   background: #fff;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 1);
 }
 
 .pts-pop {
@@ -1291,38 +1296,37 @@ button {
   z-index: 2;
   display: inline-flex;
   align-items: baseline;
-  gap: 4px;
-  padding: 18px 28px;
+  gap: 6px;
+  padding: 22px 36px;
   border-radius: 28px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: #fff;
+  border: 3px solid #2ecc71;
   box-shadow:
-    0 18px 50px rgba(20, 8, 40, 0.35),
-    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-    0 0 40px rgba(46, 204, 113, 0.35);
-  color: #fff;
+    0 22px 60px rgba(0, 0, 0, 0.45),
+    0 0 0 8px rgba(46, 204, 113, 0.22),
+    0 0 48px rgba(46, 204, 113, 0.55);
+  color: var(--pp-ink);
   animation: ptsPop 0.85s cubic-bezier(0.22, 1.4, 0.36, 1) both;
 }
 
 .pts-plus {
-  font-size: clamp(28px, 5vw, 42px);
-  font-weight: 800;
-  color: var(--pp-yellow);
-  text-shadow: 0 4px 18px rgba(245, 197, 24, 0.55);
+  font-size: clamp(32px, 5.5vw, 48px);
+  font-weight: 900;
+  color: #1fa85a;
+  text-shadow: none;
 }
 
 .pts-num {
-  font-size: clamp(52px, 10vw, 84px);
+  font-size: clamp(56px, 11vw, 92px);
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 0.9;
-  background: linear-gradient(180deg, #fff 20%, #d9ffe8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 8px 24px rgba(46, 204, 113, 0.45));
+  color: #5f259f;
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  filter: none;
+  text-shadow: 0 2px 0 rgba(95, 37, 159, 0.12);
 }
 
 .pts-label {
@@ -1331,7 +1335,7 @@ button {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.92);
+  color: #1fa85a;
 }
 
 .feedback {
@@ -1339,19 +1343,22 @@ button {
   bottom: max(28px, env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
-  padding: 14px 22px;
+  padding: 16px 26px;
   border-radius: 16px;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 800;
   z-index: 121;
-  max-width: min(90vw, 420px);
+  max-width: min(90vw, 440px);
   text-align: center;
-  box-shadow: 0 14px 36px rgba(20, 8, 40, 0.28);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 3px rgba(255, 255, 255, 0.35);
 }
 
 .feedback-good {
-  background: linear-gradient(180deg, #3adf86 0%, var(--pp-green) 100%);
-  color: #fff;
+  background: #fff;
+  color: #147a45;
+  border: 2px solid #2ecc71;
 }
 
 .feedback-animated {
