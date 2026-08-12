@@ -776,7 +776,7 @@ function renderHeader(_title, _subtitle, chips = "") {
 function renderBrandBanner() {
   return `
     <div class="brand-banner">
-      <h1 class="brand-banner-title">Word <span class="brand-of">of</span> Honor</h1>
+      <h1 class="brand-banner-title">Word of Honor</h1>
       <p class="brand-banner-sub">Integrity Challenge</p>
     </div>
   `;

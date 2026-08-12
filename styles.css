@@ -366,16 +366,6 @@ button {
   text-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
 }
 
-.brand-banner-title .brand-of {
-  display: inline;
-  font-size: 0.72em;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  vertical-align: baseline;
-  margin: 0 0.12em;
-  opacity: 0.95;
-}
-
 .brand-banner-sub {
   margin: 6px 0 0;
   font-size: clamp(14px, 2.4vw, 18px);
@@ -589,19 +579,34 @@ button {
 }
 
 .field-input {
+  box-sizing: border-box;
   width: 100%;
-  min-height: clamp(44px, 6vh, 56px);
-  padding: 0 16px;
+  height: clamp(48px, 6.2vh, 56px);
+  min-height: clamp(48px, 6.2vh, 56px);
+  padding: 0 18px;
   border: 2px solid var(--pp-line);
   border-radius: var(--radius-sm);
   background: #fff;
-  font-family: inherit;
+  font-family: "PhonePe Sans", "Segoe UI", system-ui, sans-serif;
   font-size: 17px;
-  font-weight: 500;
+  font-weight: 400;
+  line-height: clamp(44px, 5.6vh, 52px);
   color: var(--pp-ink);
+  letter-spacing: 0.01em;
+  text-align: left;
+  vertical-align: middle;
+  appearance: none;
+  -webkit-appearance: none;
   user-select: text;
   -webkit-user-select: text;
   transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field-input::placeholder {
+  color: #9a91ad;
+  font-weight: 400;
+  line-height: normal;
+  opacity: 1;
 }
 
 .field-input:focus {
@@ -1392,15 +1397,120 @@ button {
   }
 }
 
-@media (min-width: 1400px) and (min-height: 800px) {
+@media (min-width: 1200px) and (min-height: 750px) {
   .app {
-    --max-w: 1400px;
+    --max-w: 1500px;
   }
+
+  .brand-banner {
+    max-width: 1100px;
+  }
+
+  .brand-banner-title {
+    font-size: clamp(40px, 4.6vw, 54px);
+  }
+
+  .brand-banner-sub {
+    font-size: clamp(16px, 1.6vw, 20px);
+    margin-top: 8px;
+  }
+
+  .form-body,
+  .rules-body,
+  .end-body,
+  .quiz-body {
+    gap: clamp(24px, 3vh, 40px);
+  }
+
+  .form-card,
+  .rules-panel {
+    width: min(980px, 90%);
+    padding: clamp(28px, 3.5vh, 40px) clamp(28px, 3vw, 44px);
+  }
+
+  .form-title {
+    font-size: clamp(32px, 3.4vw, 42px);
+  }
+
+  .form-lead {
+    font-size: 17px;
+    margin-bottom: 28px;
+  }
+
+  .field-input {
+    height: 64px;
+    min-height: 64px;
+    line-height: 60px;
+    font-size: 19px;
+    padding: 0 20px;
+  }
+
+  .btn-primary {
+    width: min(360px, 100%);
+    min-height: 64px;
+    font-size: 18px;
+  }
+
+  .quiz-card {
+    width: min(900px, 90%);
+  }
+
+  .end-score-card {
+    width: min(760px, 90%);
+  }
+
+  .start-hero .brand-banner-title {
+    font-size: clamp(42px, 4.8vw, 56px);
+  }
+
+  .steps {
+    max-width: 1100px;
+    gap: 18px;
+  }
+
+  .step {
+    padding: 22px 20px;
+  }
+}
+
+@media (min-width: 1600px) and (min-height: 900px) {
+  .app {
+    --max-w: 1680px;
+  }
+
+  .form-card,
+  .rules-panel {
+    width: min(1120px, 78%);
+    padding: 40px 48px;
+  }
+
+  .brand-banner-title {
+    font-size: 58px;
+  }
+
+  .form-title {
+    font-size: 46px;
+  }
+
+  .field-input {
+    height: 70px;
+    min-height: 70px;
+    line-height: 66px;
+    font-size: 20px;
+  }
+
+  .quiz-card {
+    width: min(1000px, 78%);
+  }
+
+  .steps {
+    max-width: 1200px;
+  }
+}
+
+@media (min-width: 1400px) and (min-height: 800px) {
   .start-hero-title {
     font-size: 60px;
-  }
-  .quiz-card {
-    width: min(860px, 100%);
   }
   .wordfind-layout {
     grid-template-columns: minmax(0, 1fr) 320px;
