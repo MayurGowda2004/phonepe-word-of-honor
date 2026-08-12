@@ -173,7 +173,9 @@ function shuffleInPlace(arr, rng) {
 
 /** Pick `count` random unique questions, avoiding ones used recently on this kiosk. */
 function questionKey(q, fallbackIndex) {
-  return String(q?.id ?? `${q?.allegation || ""}::${q?.clue || ""}` || fallbackIndex);
+  if (q?.id != null && String(q.id).trim() !== "") return String(q.id);
+  const fromFields = `${q?.allegation || ""}::${q?.clue || ""}`;
+  return fromFields !== "::" ? fromFields : String(fallbackIndex);
 }
 
 function loadRecentQuestionKeys() {
