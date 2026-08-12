@@ -549,7 +549,6 @@ async function answerQuiz(optionIndex) {
   const correct = optionIndex === shuffled.correctIndex;
   const pts = sectionPoints();
   const quizPts = correct ? pts : 0;
-  const correctLabel = shuffled.options[shuffled.correctIndex];
   const mcqLabel = questionLabel(state.questionIndex);
 
   state.currentRound = { quiz: quizPts, word: 0, quizCorrect: correct, keywordSkipped: !correct };
@@ -557,16 +556,9 @@ async function answerQuiz(optionIndex) {
 
   if (!correct) {
     beep("bad");
-    const nextHint = isFinalMcqRound()
-      ? "Game over — see your score"
-      : "Find the word skipped — moving to next question";
-    state.feedback = {
-      type: "bad",
-      text: `${mcqLabel} incorrect — correct answer: ${correctLabel}. ${nextHint}`,
-    };
+    // Show green/red option highlight only — no overlay toast
     render();
-    await delay(isFinalMcqRound() ? 2800 : 2600);
-    state.feedback = null;
+    await delay(isFinalMcqRound() ? 2200 : 2000);
     state.quizReveal = null;
     state.shuffledQuiz = null;
     finishRound();
