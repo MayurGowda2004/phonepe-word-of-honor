@@ -253,28 +253,68 @@ button {
   text-transform: uppercase;
 }
 
-.panel-brand {
+/* Global title above white panels (all pages) */
+.brand-banner {
+  flex-shrink: 0;
   text-align: center;
-  margin: 0 0 18px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--pp-line);
+  padding: clamp(8px, 1.6vh, 16px) 16px 4px;
 }
 
-.panel-brand-title {
+.brand-banner-title {
   margin: 0;
-  font-size: clamp(28px, 4.5vw, 40px);
+  font-size: clamp(28px, 4.8vw, 44px);
   font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 1.1;
-  color: var(--pp-purple);
+  line-height: 1.05;
+  color: #fff;
+  text-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
 }
 
-.panel-brand-sub {
+.brand-banner-sub {
   margin: 6px 0 0;
-  font-size: clamp(14px, 2.4vw, 17px);
+  font-size: clamp(14px, 2.4vw, 18px);
   font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.03em;
+}
+
+.screen-wordfind .brand-banner {
+  padding: 4px 12px 2px;
+}
+
+.screen-wordfind .brand-banner-title {
+  font-size: clamp(20px, 3.2vh, 28px);
+}
+
+.screen-wordfind .brand-banner-sub {
+  font-size: clamp(12px, 1.8vh, 14px);
+  margin-top: 2px;
+}
+
+.quiz-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.quiz-topic {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pp-purple);
+  background: var(--pp-purple-soft);
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+
+.quiz-progress {
+  font-size: 12px;
+  font-weight: 700;
   color: var(--pp-muted);
-  letter-spacing: 0.02em;
 }
 
 .panel-kicker::before {
@@ -586,21 +626,8 @@ button {
   animation: riseIn 0.35s ease-out;
 }
 
-.quiz-progress {
-  position: absolute;
-  top: 16px;
-  right: 18px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--pp-purple);
-  background: var(--pp-purple-soft);
-  padding: 5px 10px;
-  border-radius: 999px;
-}
-
 .quiz-question {
   margin: 8px 0 10px;
-  padding-right: 64px;
   font-size: clamp(18px, 2.8vw, 26px);
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -1114,14 +1141,6 @@ button {
   }
   .field-input {
     font-size: 16px;
-  }
-  .quiz-question {
-    padding-right: 0;
-  }
-  .quiz-progress {
-    position: static;
-    align-self: flex-start;
-    margin-bottom: 8px;
   }
 }
 

@@ -761,23 +761,24 @@ function timerColor(ms, totalMs) {
   return "bad";
 }
 
-function renderHeader(title, subtitle, chips = "") {
-  const titleBlock =
-    title || subtitle
-      ? `<div class="brand-divider" aria-hidden="true"></div>
-        <div class="title">
-          ${title ? `<div class="h1">${title}</div>` : ""}
-          ${subtitle ? `<div class="sub">${subtitle}</div>` : ""}
-        </div>`
-      : "";
+function renderHeader(_title, _subtitle, chips = "") {
   return `
     <header class="header">
       <div class="brand">
         <img class="logo-img" src="./assets/logo.png" alt="PhonePe" width="148" height="40" />
-        ${titleBlock}
       </div>
       <div class="header-meta">${chips}</div>
     </header>
+  `;
+}
+
+/** Global page title — outside white panels, on every screen. */
+function renderBrandBanner() {
+  return `
+    <div class="brand-banner">
+      <h1 class="brand-banner-title">Word of Honor</h1>
+      <p class="brand-banner-sub">Integrity Challenge</p>
+    </div>
   `;
 }
 
@@ -877,13 +878,10 @@ function attachFormSubmit(selector, onSubmit) {
 function renderEnterDetails() {
   $app.innerHTML = `
     <div class="screen screen-onboard">
-      ${renderHeader("", "")}
+      ${renderHeader()}
+      ${renderBrandBanner()}
       <div class="screen-body form-body">
         <div class="panel form-card">
-          <div class="panel-brand">
-            <h1 class="panel-brand-title">Word of Honor</h1>
-            <p class="panel-brand-sub">Integrity Challenge</p>
-          </div>
           <div class="panel-kicker">Player check-in</div>
           <h2 class="form-title">Enter your details</h2>
           <p class="form-lead">Name and Employee ID to begin the Integrity challenge.</p>
@@ -939,7 +937,8 @@ function renderRules() {
   const wordSec = cfg.wordFindSeconds ?? 20;
   $app.innerHTML = `
     <div class="screen screen-onboard">
-      ${renderHeader("Word of Honor", "How to play", playerChip())}
+      ${renderHeader("", "", playerChip())}
+      ${renderBrandBanner()}
       <div class="screen-body rules-body">
         <div class="panel rules-panel">
           <div class="panel-kicker">Game rules</div>
@@ -989,9 +988,9 @@ function renderStart() {
   const total = roundsPerGame();
   $app.innerHTML = `
     <div class="screen screen-ready">
-      ${renderHeader("Word of Honor", "Ready to play", playerChip())}
+      ${renderHeader("", "", playerChip())}
+      ${renderBrandBanner()}
       <div class="start-hero">
-        <div class="hero-badge">Integrity Challenge</div>
         <h1>Ready, <span>${escapeHtml(state.playerName)}</span>?</h1>
         <p class="lead">
           ${total} questions · find the keyword after each correct answer · max
@@ -1051,13 +1050,17 @@ function renderQuiz() {
   $app.innerHTML = `
     <div class="screen screen-quiz">
       ${renderHeader(
-        qLabel,
-        escapeHtml(q.allegation || "Integrity"),
+        "",
+        "",
         `<span class="chip chip-strong">Score ${displayScore()}</span> ${playerChip()}`,
       )}
+      ${renderBrandBanner()}
       <div class="screen-body quiz-body">
         <div class="panel quiz-card">
-          <div class="quiz-progress">${state.questionIndex + 1} / ${total}</div>
+          <div class="quiz-meta">
+            <span class="quiz-topic">${escapeHtml(q.allegation || "Integrity")}</span>
+            <span class="quiz-progress">${qLabel} · ${state.questionIndex + 1} / ${total}</span>
+          </div>
           <h2 class="quiz-question">${escapeHtml(q.clue)}</h2>
           <p class="quiz-hint">${
             reveal
@@ -1092,10 +1095,11 @@ function renderWordFind() {
   $app.innerHTML = `
     <div class="screen screen-wordfind">
       ${renderHeader(
-        "Find the word",
-        escapeHtml(categoryLabel),
+        "",
+        "",
         `<span class="chip chip-strong">Score ${displayScore()}</span> ${playerChip()}`,
       )}
+      ${renderBrandBanner()}
       <div class="screen-body wordfind-body">
         <div class="play-layout wordfind-layout">
           <div class="panel puzzle-card">
@@ -1159,10 +1163,11 @@ function renderEnd() {
   $app.innerHTML = `
     <div class="screen screen-end">
       ${renderHeader(
-        "Game Over",
-        escapeHtml(feedback),
+        "",
+        "",
         `<span class="chip">Resets ~${left}s</span> ${playerChip()}`,
       )}
+      ${renderBrandBanner()}
       <div class="screen-body end-body">
         <div class="panel end-score-card">
           <div class="player-recap">${escapeHtml(state.playerName)} · ${escapeHtml(state.employeeId)}</div>
