@@ -242,12 +242,10 @@ function beep(type) {
 }
 
 // ---- Word search generator ----
-// Game Rules: crossword is horizontal + vertical only (no diagonals).
+// Horizontal L→R and vertical top→bottom only (no diagonals, no reverse).
 const DIRS = [
-  { dr: 0, dc: 1 },
-  { dr: 0, dc: -1 },
-  { dr: 1, dc: 0 },
-  { dr: -1, dc: 0 },
+  { dr: 0, dc: 1 }, // left → right
+  { dr: 1, dc: 0 }, // top → bottom
 ];
 
 function randInt(n, rng = Math.random) {
@@ -272,13 +270,12 @@ function computeGridSize(words, minSize, maxSize) {
 function tryPlaceWord(grid, word, wordIndex, rng) {
   const size = grid.length;
   const dir = choice(DIRS, rng);
-  const reversed = rng() < 0.5;
-  const letters = (reversed ? word.split("").reverse().join("") : word).split("");
+  const letters = word.split("");
   const dr = dir.dr;
   const dc = dir.dc;
-  const rMin = dr === -1 ? letters.length - 1 : 0;
+  const rMin = 0;
   const rMax = dr === 1 ? size - letters.length : size - 1;
-  const cMin = dc === -1 ? letters.length - 1 : 0;
+  const cMin = 0;
   const cMax = dc === 1 ? size - letters.length : size - 1;
   if (rMax < rMin || cMax < cMin) return null;
 
@@ -299,7 +296,7 @@ function tryPlaceWord(grid, word, wordIndex, rng) {
     grid[r][c].letter = letters[i];
     grid[r][c].belongsTo.add(wordIndex);
   }
-  return { dir, reversed, start: { r: startR, c: startC }, cells };
+  return { dir, reversed: false, start: { r: startR, c: startC }, cells };
 }
 
 function generateWordSearch(words, cfgGrid, seed) {
@@ -743,11 +740,12 @@ function cellsOnLine(a, b) {
   return out;
 }
 function readWordFromCells(cells, gridData) {
-  return cells.map(({ r, c }) => gridData.grid[r][c].letter).join("");
+  // Always read L→R or top→bottom regardless of drag direction.
+  const ordered = [...cells].sort((a, b) => (a.r - b.r) || (a.c - b.c));
+  return ordered.map(({ r, c }) => gridData.grid[r][c].letter).join("");
 }
 function whichWordMatch(selectedWord, gridData) {
-  const reversed = selectedWord.split("").reverse().join("");
-  return gridData.words.findIndex((w) => w === selectedWord || w === reversed);
+  return gridData.words.findIndex((w) => w === selectedWord);
 }
 
 function flashBad() {
@@ -966,7 +964,7 @@ function renderRules() {
                 <li>Wrong Question 1 → skip word search, go to Question 2</li>
                 <li>Wrong final question → game over</li>
                 <li>Wrong keyword or timeout → 0 pts for that section</li>
-                <li>${wordSec}s per word search · horizontal & vertical only</li>
+                <li>${wordSec}s per word search · left→right & top→bottom only</li>
               </ul>
             </div>
           </div>
@@ -1115,7 +1113,7 @@ function renderWordFind() {
             <div class="grid-section">
               ${gridHtml}
             </div>
-            <p class="grid-hint">Drag horizontally or vertically · ${keywordCount} keywords hidden (jumbled)</p>
+            <p class="grid-hint">Drag left→right or top→bottom · ${keywordCount} keywords hidden (jumbled)</p>
           </div>
           <div class="card card-sm rules-card">
             <div class="section-label">Rules</div>
@@ -1137,7 +1135,7 @@ function renderWordFind() {
       </div>
       <footer class="footer">
         <span>${cfg.wordFindSeconds ?? 20} seconds per word search</span>
-        <span>Horizontal & vertical only · forwards or backwards</span>
+        <span>Horizontal & vertical only · left→right and top→bottom</span>
       </footer>
       ${renderFeedback()}
     </div>
