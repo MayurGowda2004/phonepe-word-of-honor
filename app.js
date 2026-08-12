@@ -879,8 +879,8 @@ function renderEnterDetails() {
   $app.innerHTML = `
     <div class="screen screen-onboard">
       ${renderHeader()}
-      ${renderBrandBanner()}
       <div class="screen-body form-body">
+        ${renderBrandBanner()}
         <div class="panel form-card">
           <div class="panel-kicker">Player check-in</div>
           <h2 class="form-title">Enter your details</h2>
@@ -938,8 +938,8 @@ function renderRules() {
   $app.innerHTML = `
     <div class="screen screen-onboard">
       ${renderHeader("", "", playerChip())}
-      ${renderBrandBanner()}
       <div class="screen-body rules-body">
+        ${renderBrandBanner()}
         <div class="panel rules-panel">
           <div class="panel-kicker">Game rules</div>
           <h2 class="form-title">Play across 4 rounds</h2>
@@ -989,8 +989,8 @@ function renderStart() {
   $app.innerHTML = `
     <div class="screen screen-ready">
       ${renderHeader("", "", playerChip())}
-      ${renderBrandBanner()}
       <div class="start-hero">
+        ${renderBrandBanner()}
         <h1>Ready, <span>${escapeHtml(state.playerName)}</span>?</h1>
         <p class="lead">
           ${total} questions · find the keyword after each correct answer · max
@@ -1054,8 +1054,8 @@ function renderQuiz() {
         "",
         `<span class="chip chip-strong">Score ${displayScore()}</span> ${playerChip()}`,
       )}
-      ${renderBrandBanner()}
       <div class="screen-body quiz-body">
+        ${renderBrandBanner()}
         <div class="panel quiz-card">
           <div class="quiz-meta">
             <span class="quiz-topic">${escapeHtml(q.allegation || "Integrity")}</span>
@@ -1099,8 +1099,8 @@ function renderWordFind() {
         "",
         `<span class="chip chip-strong">Score ${displayScore()}</span> ${playerChip()}`,
       )}
-      ${renderBrandBanner()}
       <div class="screen-body wordfind-body">
+        ${renderBrandBanner()}
         <div class="play-layout wordfind-layout">
           <div class="panel puzzle-card">
             <div class="puzzle-top">
@@ -1167,8 +1167,8 @@ function renderEnd() {
         "",
         `<span class="chip">Resets ~${left}s</span> ${playerChip()}`,
       )}
-      ${renderBrandBanner()}
       <div class="screen-body end-body">
+        ${renderBrandBanner()}
         <div class="panel end-score-card">
           <div class="player-recap">${escapeHtml(state.playerName)} · ${escapeHtml(state.employeeId)}</div>
           <div class="final-score">${state.totalScore}</div>
