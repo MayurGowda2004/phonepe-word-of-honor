@@ -1082,7 +1082,6 @@ function renderQuiz() {
 function renderWordFind() {
   const q = activeQuestion();
   const categoryLabel = getCategoryLabel(q);
-  const categoryWord = getCategoryWord(q);
   const answerLabel = getAnswerLabel(q);
   const totalMs = (cfg.wordFindSeconds ?? 20) * 1000;
   const pts = sectionPoints();
@@ -1091,34 +1090,34 @@ function renderWordFind() {
   const gridHtml = buildGridHtml(state.gridData, !state.revealTarget);
 
   $app.innerHTML = `
-    <div class="screen">
+    <div class="screen screen-wordfind">
       ${renderHeader(
         kwLabel,
-        questionLabel(state.questionIndex),
+        "Find the hidden integrity keyword",
         `<span class="chip chip-strong">Score: ${displayScore()}</span> ${playerChip()}`,
       )}
-      <div class="screen-body">
+      <div class="screen-body wordfind-body">
         <div class="play-layout wordfind-layout">
           <div class="card card-sm puzzle-card">
-            <div data-timer-host>${renderTimerBlock(state.remainingMs, totalMs)}</div>
-            <div class="find-target">
-              <span class="find-target-label">Find this keyword in the grid</span>
-              <strong>${escapeHtml(categoryLabel)}</strong>
-              <span class="find-target-code">${escapeHtml(categoryWord)}</span>
+            <div class="puzzle-top">
+              <div data-timer-host>${renderTimerBlock(state.remainingMs, totalMs)}</div>
+              <div class="find-target">
+                <span class="find-target-label">Find this keyword</span>
+                <strong>${escapeHtml(categoryLabel)}</strong>
+              </div>
             </div>
             <div class="grid-section">
               ${gridHtml}
             </div>
-            <p class="grid-hint">Drag left→right or top→bottom · ${keywordCount} keywords hidden (jumbled)</p>
+            <p class="grid-hint">Drag left→right or top→bottom · ${keywordCount} keywords hidden</p>
           </div>
           <div class="card card-sm rules-card">
             <div class="section-label">Rules</div>
             <ul class="rules-list">
-              <li>Find this question’s <strong>keyword</strong> (not the quiz option text)</li>
-              <li>Both game keywords are hidden in the crossword (jumbled layout)</li>
+              <li>Find this question’s <strong>keyword</strong></li>
+              <li>Both game keywords are in the crossword</li>
               <li>Correct keyword → <strong>+${pts} pts</strong></li>
-              <li>Wrong keyword or timeout → <strong>0 pts</strong> for this section</li>
-              <li>Each correct section awards <strong>${pts} pts</strong> (max ${roundsPerGame() * pts * 2})</li>
+              <li>Wrong keyword / timeout → <strong>0 pts</strong></li>
             </ul>
             <div class="quiz-recap">
               <div class="section-label">You answered</div>
@@ -1129,10 +1128,6 @@ function renderWordFind() {
           </div>
         </div>
       </div>
-      <footer class="footer">
-        <span>${cfg.wordFindSeconds ?? 20} seconds per word search</span>
-        <span>Horizontal & vertical only · left→right and top→bottom</span>
-      </footer>
       ${renderFeedback()}
     </div>
   `;

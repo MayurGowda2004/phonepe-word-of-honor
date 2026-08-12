@@ -103,6 +103,13 @@ body {
   overflow-y: auto;
 }
 
+body:has(.screen-wordfind),
+.app:has(.screen-wordfind) {
+  overflow: hidden;
+  height: 100vh;
+  height: 100dvh;
+}
+
 button {
   font: inherit;
   border: none;
@@ -1014,6 +1021,179 @@ button {
   height: 100%;
   border-radius: 999px;
   transition: width 0.12s linear, background 0.2s;
+}
+
+/* ── Word-find: fit entire puzzle in one viewport (no page scroll) ── */
+.screen-wordfind {
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+.screen-wordfind .header {
+  min-height: 52px;
+  padding-top: max(8px, env(safe-area-inset-top));
+  padding-bottom: 8px;
+}
+
+.screen-wordfind .wordfind-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: clamp(8px, 1.2vh, 16px) clamp(10px, 2vw, 20px);
+}
+
+.screen-wordfind .wordfind-layout {
+  height: 100%;
+  min-height: 0;
+  gap: clamp(8px, 1.2vw, 16px);
+}
+
+.screen-wordfind .puzzle-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  padding: clamp(8px, 1.2vh, 14px);
+}
+
+.screen-wordfind .puzzle-top {
+  flex-shrink: 0;
+}
+
+.screen-wordfind .timer-block {
+  margin-bottom: clamp(4px, 0.8vh, 10px);
+  gap: 10px;
+}
+
+.screen-wordfind .timer-ring {
+  width: 44px;
+  height: 44px;
+}
+
+.screen-wordfind .timer-info .value {
+  font-size: clamp(18px, 2.4vh, 24px);
+}
+
+.screen-wordfind .find-target {
+  margin-bottom: clamp(6px, 1vh, 10px);
+  padding: clamp(6px, 1vh, 10px) 12px;
+}
+
+.screen-wordfind .find-target-label {
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.screen-wordfind .find-target strong {
+  font-size: clamp(15px, 2.2vh, 20px);
+}
+
+.screen-wordfind .grid-section {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen-wordfind .grid-fit {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  container-type: size;
+  display: grid;
+  place-items: center;
+}
+
+.screen-wordfind .grid {
+  /* Fit inside available box: limited by both width and height */
+  width: min(100cqw, 100cqh);
+  height: min(100cqw, 100cqh);
+  max-width: 100%;
+  max-height: 100%;
+  gap: clamp(1px, 0.35vmin, 4px);
+  padding: clamp(2px, 0.6vmin, 8px);
+}
+
+.screen-wordfind .cell {
+  aspect-ratio: 1;
+  font-size: clamp(8px, calc(min(100cqw, 100cqh) / var(--cols, 12) * 0.42), 20px);
+}
+
+.screen-wordfind .grid-hint {
+  flex-shrink: 0;
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+
+.screen-wordfind .rules-card {
+  min-height: 0;
+  overflow: auto;
+  padding: clamp(10px, 1.2vh, 16px);
+}
+
+@media (min-width: 901px) {
+  .screen-wordfind .wordfind-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+    align-items: stretch;
+  }
+
+  .screen-wordfind .rules-card {
+    height: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .screen-wordfind .wordfind-layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .screen-wordfind .puzzle-card {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .screen-wordfind .rules-card {
+    display: none; /* keep puzzle fully visible on phones */
+  }
+
+  .screen-wordfind .grid-hint {
+    display: none;
+  }
+}
+
+@media (max-height: 700px) {
+  .screen-wordfind .title .sub {
+    display: none;
+  }
+
+  .screen-wordfind .find-target-label {
+    display: none;
+  }
+
+  .screen-wordfind .rules-card .quiz-recap {
+    display: none;
+  }
+
+  .screen-wordfind .timer-info .label,
+  .screen-wordfind .progress-bar {
+    display: none;
+  }
+}
+
+@media (max-height: 560px) {
+  .screen-wordfind .rules-card {
+    display: none;
+  }
+
+  .screen-wordfind .wordfind-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Grid — fluid across all screen sizes ── */
