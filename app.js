@@ -776,7 +776,7 @@ function renderHeader(_title, _subtitle, chips = "") {
 function renderBrandBanner() {
   return `
     <div class="brand-banner">
-      <h1 class="brand-banner-title">Word of Honor</h1>
+      <h1 class="brand-banner-title">Word <span class="brand-of">of</span> Honor</h1>
       <p class="brand-banner-sub">Integrity Challenge</p>
     </div>
   `;
@@ -991,7 +991,7 @@ function renderStart() {
       ${renderHeader("", "", playerChip())}
       <div class="start-hero">
         ${renderBrandBanner()}
-        <h1>Ready, <span>${escapeHtml(state.playerName)}</span>?</h1>
+        <h2 class="start-hero-title">Ready, <span>${escapeHtml(state.playerName)}</span>?</h2>
         <p class="lead">
           ${total} questions · find the keyword after each correct answer · max
           <strong>${maxScore} points</strong>

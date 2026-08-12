@@ -99,10 +99,18 @@ button {
   -webkit-user-select: none;
   touch-action: manipulation;
   background-color: var(--pp-purple);
-  background-image: url("./assets/bg.png");
+  /* Subtle wash by default — colorful bars stay soft */
+  background-image:
+    linear-gradient(165deg, rgba(72, 28, 130, 0.9) 0%, rgba(95, 37, 159, 0.84) 45%, rgba(61, 24, 112, 0.9) 100%),
+    url("./assets/bg.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+/* Ready screen keeps the full vibrant brand background */
+.app:has(.screen-ready) {
+  background-image: url("./assets/bg.png");
 }
 
 @media (max-width: 900px) {
@@ -256,27 +264,43 @@ button {
 /* Global title above white panels (all pages) */
 .brand-banner {
   flex-shrink: 0;
+  align-self: center;
   width: 100%;
+  max-width: 920px;
   text-align: center;
   padding: 0;
 }
 
 .brand-banner-title {
   margin: 0;
+  display: block;
+  width: 100%;
   font-size: clamp(28px, 4.8vw, 44px);
   font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
   color: #fff;
+  text-align: center;
   text-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
 }
 
+.brand-banner-title .brand-of {
+  display: inline;
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  vertical-align: baseline;
+  margin: 0 0.12em;
+  opacity: 0.95;
+}
+
 .brand-banner-sub {
-  margin: 4px 0 0;
+  margin: 6px 0 0;
   font-size: clamp(14px, 2.4vw, 18px);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.03em;
+  text-align: center;
 }
 
 .screen-wordfind .brand-banner-title {
@@ -561,7 +585,7 @@ button {
   text-transform: uppercase;
 }
 
-.start-hero h1 {
+.start-hero-title {
   margin: 0;
   max-width: 900px;
   font-size: clamp(34px, 6vw, 58px);
@@ -569,11 +593,20 @@ button {
   letter-spacing: -0.04em;
   line-height: 1.05;
   color: #fff;
+  text-align: center;
   text-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
 
-.start-hero h1 span {
+.start-hero-title span {
   color: var(--pp-yellow);
+}
+
+.start-hero .brand-banner {
+  max-width: 920px;
+}
+
+.start-hero .brand-banner-title {
+  font-size: clamp(30px, 5vw, 46px);
 }
 
 .start-hero .lead {
@@ -1145,7 +1178,7 @@ button {
   .logo-img {
     width: clamp(112px, 40vw, 140px);
   }
-  .start-hero h1 {
+  .start-hero-title {
     font-size: clamp(30px, 9vw, 40px);
   }
   .field-input {
@@ -1184,7 +1217,7 @@ button {
   .app {
     --max-w: 1400px;
   }
-  .start-hero h1 {
+  .start-hero-title {
     font-size: 60px;
   }
   .quiz-card {
