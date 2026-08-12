@@ -375,14 +375,15 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  /* Center title + white panel as one block; keep fixed gap between them */
+  justify-content: center;
   flex: 1;
   min-height: 0;
-  /* Gap between Word of Honor and white panel (matches rules screen look) */
   gap: 28px;
 }
 
 .screen-wordfind .wordfind-body {
+  justify-content: flex-start;
   gap: 10px;
 }
 
@@ -394,11 +395,15 @@ button {
   animation: riseIn 0.4s ease-out;
 }
 
+.form-card {
+  padding: clamp(20px, 3.2vw, 32px) clamp(18px, 3vw, 28px) clamp(22px, 3.2vw, 32px);
+}
+
 .form-card .btn-primary,
 .rules-panel .btn-primary,
 .end-score-card .btn-primary {
   align-self: center;
-  margin-top: 8px;
+  margin-top: 18px;
 }
 
 @keyframes riseIn {
@@ -535,10 +540,10 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   text-align: center;
   gap: clamp(14px, 2.5vh, 28px);
-  padding: 8px 12px clamp(12px, 3vh, 36px);
+  padding: clamp(12px, 3vh, 36px) 12px;
   animation: riseIn 0.45s ease-out;
 }
 
