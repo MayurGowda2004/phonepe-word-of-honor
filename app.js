@@ -762,15 +762,19 @@ function timerColor(ms, totalMs) {
 }
 
 function renderHeader(title, subtitle, chips = "") {
+  const titleBlock =
+    title || subtitle
+      ? `<div class="brand-divider" aria-hidden="true"></div>
+        <div class="title">
+          ${title ? `<div class="h1">${title}</div>` : ""}
+          ${subtitle ? `<div class="sub">${subtitle}</div>` : ""}
+        </div>`
+      : "";
   return `
     <header class="header">
       <div class="brand">
         <img class="logo-img" src="./assets/logo.png" alt="PhonePe" width="148" height="40" />
-        <div class="brand-divider" aria-hidden="true"></div>
-        <div class="title">
-          <div class="h1">${title}</div>
-          ${subtitle ? `<div class="sub">${subtitle}</div>` : ""}
-        </div>
+        ${titleBlock}
       </div>
       <div class="header-meta">${chips}</div>
     </header>
@@ -873,9 +877,13 @@ function attachFormSubmit(selector, onSubmit) {
 function renderEnterDetails() {
   $app.innerHTML = `
     <div class="screen screen-onboard">
-      ${renderHeader("Word of Honor", "Integrity Challenge")}
+      ${renderHeader("", "")}
       <div class="screen-body form-body">
         <div class="panel form-card">
+          <div class="panel-brand">
+            <h1 class="panel-brand-title">Word of Honor</h1>
+            <p class="panel-brand-sub">Integrity Challenge</p>
+          </div>
           <div class="panel-kicker">Player check-in</div>
           <h2 class="form-title">Enter your details</h2>
           <p class="form-lead">Name and Employee ID to begin the Integrity challenge.</p>

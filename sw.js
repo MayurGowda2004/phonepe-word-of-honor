@@ -1,5 +1,5 @@
 /* Offline-first kiosk cache */
-const CACHE = "phonepe-kiosk-v32";
+const CACHE = "phonepe-kiosk-v33";
 const ASSETS = [
   "./",
   "./index.html",

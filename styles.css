@@ -253,6 +253,30 @@ button {
   text-transform: uppercase;
 }
 
+.panel-brand {
+  text-align: center;
+  margin: 0 0 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--pp-line);
+}
+
+.panel-brand-title {
+  margin: 0;
+  font-size: clamp(28px, 4.5vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--pp-purple);
+}
+
+.panel-brand-sub {
+  margin: 6px 0 0;
+  font-size: clamp(14px, 2.4vw, 17px);
+  font-weight: 600;
+  color: var(--pp-muted);
+  letter-spacing: 0.02em;
+}
+
 .panel-kicker::before {
   content: "";
   width: 8px;
