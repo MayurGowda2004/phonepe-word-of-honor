@@ -99,18 +99,16 @@ button {
   -webkit-user-select: none;
   touch-action: manipulation;
   background-color: var(--pp-purple);
-  /* Subtle wash by default — colorful bars stay soft */
+  /* Full brand art on every screen + soft depth glow */
   background-image:
-    linear-gradient(165deg, rgba(72, 28, 130, 0.9) 0%, rgba(95, 37, 159, 0.84) 45%, rgba(61, 24, 112, 0.9) 100%),
+    radial-gradient(ellipse 90% 70% at 50% 18%, rgba(255, 255, 255, 0.1), transparent 55%),
+    radial-gradient(ellipse 80% 55% at 80% 90%, rgba(46, 196, 255, 0.14), transparent 50%),
+    radial-gradient(ellipse 70% 50% at 12% 85%, rgba(245, 197, 24, 0.12), transparent 48%),
     url("./assets/bg.png");
-  background-size: cover;
+  background-size: cover, cover, cover, cover;
   background-position: center;
   background-repeat: no-repeat;
-}
-
-/* Ready screen keeps the full vibrant brand background */
-.app:has(.screen-ready) {
-  background-image: url("./assets/bg.png");
+  background-attachment: fixed;
 }
 
 @media (max-width: 900px) {
