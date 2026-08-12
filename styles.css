@@ -391,7 +391,19 @@ button {
 
 .player-form {
   display: grid;
-  gap: var(--space-md);
+  gap: var(--space-sm);
+}
+
+.player-form .field-label {
+  margin-top: var(--space-xs);
+}
+
+.player-form .field-label:first-of-type {
+  margin-top: 0;
+}
+
+.player-form .btn-primary {
+  margin-top: var(--space-md);
 }
 
 .field-label {

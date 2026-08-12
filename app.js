@@ -357,8 +357,7 @@ function generateWordSearch(words, cfgGrid, seed) {
 
 // ---- State machine ----
 const Screen = {
-  ENTER_NAME: "enter_name",
-  ENTER_EMP_ID: "enter_emp_id",
+  ENTER_DETAILS: "enter_details",
   RULES: "rules",
   START: "start",
   QUIZ: "quiz",
@@ -369,7 +368,7 @@ const Screen = {
 let cfg;
 let gridAbort = null;
 let state = {
-  screen: Screen.ENTER_NAME,
+  screen: Screen.ENTER_DETAILS,
   playerName: "",
   employeeId: "",
   formError: null,
@@ -427,14 +426,8 @@ function activeQuestion() {
   return state.roundQuestions[state.questionIndex];
 }
 
-function goEnterName() {
-  state.screen = Screen.ENTER_NAME;
-  state.formError = null;
-  render();
-}
-
-function goEnterEmpId() {
-  state.screen = Screen.ENTER_EMP_ID;
+function goEnterDetails() {
+  state.screen = Screen.ENTER_DETAILS;
   state.formError = null;
   render();
 }
@@ -718,7 +711,7 @@ function endGame() {
 function goStart() {
   clearTimers();
   clearGridHandlers();
-  state.screen = Screen.ENTER_NAME;
+  state.screen = Screen.ENTER_DETAILS;
   state.playerName = "";
   state.employeeId = "";
   state.formError = null;
@@ -888,27 +881,25 @@ function attachFormSubmit(selector, onSubmit) {
   });
   const input = form.querySelector("input");
   input?.focus();
-  input?.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      form.requestSubmit();
-    }
-  });
 }
 
-function renderEnterName() {
+function renderEnterDetails() {
   $app.innerHTML = `
     <div class="screen">
-      ${renderHeader("PhonePe Integrity", "Word of Honor", renderFlowStep(1, 4, "Enter Name"))}
+      ${renderHeader("PhonePe Integrity", "Word of Honor", renderFlowStep(1, 3, "Your details"))}
       <div class="screen-body form-body">
         <div class="card card-sm form-card">
-          <h2 class="form-title">Enter your name</h2>
-          <p class="form-lead">Please enter your full name to begin the Integrity challenge.</p>
-          <form class="player-form" data-form="name">
+          <h2 class="form-title">Enter your details</h2>
+          <p class="form-lead">Please enter your name and Employee ID to begin the Integrity challenge.</p>
+          <form class="player-form" data-form="details">
             <label class="field-label" for="player-name">Name</label>
             <input id="player-name" class="field-input" name="name" type="text"
               autocomplete="name" enterkeyhint="next" maxlength="60"
               placeholder="Your name" value="${escapeHtml(state.playerName)}" />
+            <label class="field-label" for="employee-id">Employee ID</label>
+            <input id="employee-id" class="field-input" name="employeeId" type="text"
+              inputmode="text" enterkeyhint="go" maxlength="30"
+              placeholder="Employee ID" value="${escapeHtml(state.employeeId)}" />
             ${renderFormError()}
             <button class="btn btn-primary" type="submit">Continue</button>
           </form>
@@ -919,56 +910,27 @@ function renderEnterName() {
       </footer>
     </div>
   `;
-  attachFormSubmit("[data-form=name]", (fd) => {
+  attachFormSubmit("[data-form=details]", (fd) => {
     const name = String(fd.get("name") || "").trim();
-    const err = validateName(name);
-    if (err) {
-      state.formError = err;
-      state.playerName = name;
-      render();
-      return;
-    }
-    state.playerName = name;
-    goEnterEmpId();
-  });
-}
-
-function renderEnterEmpId() {
-  $app.innerHTML = `
-    <div class="screen">
-      ${renderHeader("PhonePe Integrity", "Word of Honor", renderFlowStep(2, 4, "Employee ID"))}
-      <div class="screen-body form-body">
-        <div class="card card-sm form-card">
-          <h2 class="form-title">Enter Employee ID</h2>
-          <p class="form-lead">Hi ${escapeHtml(state.playerName)}, enter your Employee ID to continue.</p>
-          <form class="player-form" data-form="emp">
-            <label class="field-label" for="employee-id">Employee ID</label>
-            <input id="employee-id" class="field-input" name="employeeId" type="text"
-              inputmode="text" enterkeyhint="next" maxlength="30"
-              placeholder="Employee ID" value="${escapeHtml(state.employeeId)}" />
-            ${renderFormError()}
-            <div class="form-actions">
-              <button class="btn btn-secondary" type="button" data-back>Back</button>
-              <button class="btn btn-primary" type="submit">Continue</button>
-            </div>
-          </form>
-        </div>
-      </div>
-      <footer class="footer">
-        <span>Player: ${escapeHtml(state.playerName)}</span>
-      </footer>
-    </div>
-  `;
-  document.querySelector("[data-back]")?.addEventListener("pointerdown", goEnterName);
-  attachFormSubmit("[data-form=emp]", (fd) => {
     const id = String(fd.get("employeeId") || "").trim();
-    const err = validateEmployeeId(id);
-    if (err) {
-      state.formError = err;
+    const nameErr = validateName(name);
+    if (nameErr) {
+      state.formError = nameErr;
+      state.playerName = name;
       state.employeeId = id;
       render();
       return;
     }
+    const idErr = validateEmployeeId(id);
+    if (idErr) {
+      state.formError = idErr;
+      state.playerName = name;
+      state.employeeId = id;
+      render();
+      document.getElementById("employee-id")?.focus();
+      return;
+    }
+    state.playerName = name;
     state.employeeId = id;
     goRules();
   });
@@ -980,7 +942,7 @@ function renderRules() {
   const wordSec = cfg.wordFindSeconds ?? 20;
   $app.innerHTML = `
     <div class="screen">
-      ${renderHeader("PhonePe Integrity", "Game Rules", renderFlowStep(3, 4, "How to Play"))}
+      ${renderHeader("PhonePe Integrity", "Game Rules", renderFlowStep(2, 3, "How to Play"))}
       <div class="screen-body rules-body">
         <div class="card card-sm rules-panel">
           <h2 class="form-title">Word of Honor</h2>
@@ -1033,7 +995,7 @@ function renderStart() {
   const total = roundsPerGame();
   $app.innerHTML = `
     <div class="screen">
-      ${renderHeader("PhonePe Integrity", "Start Game", `${renderFlowStep(4, 4, "Ready")} ${playerChip()}`)}
+      ${renderHeader("PhonePe Integrity", "Start Game", `${renderFlowStep(3, 3, "Ready")} ${playerChip()}`)}
       <div class="start-hero">
         <h1>Ready to play, <span>${escapeHtml(state.playerName)}</span>?</h1>
         <p class="lead">
@@ -1242,8 +1204,7 @@ function renderEnd() {
 
 function render() {
   if (!cfg) return;
-  if (state.screen === Screen.ENTER_NAME) return renderEnterName();
-  if (state.screen === Screen.ENTER_EMP_ID) return renderEnterEmpId();
+  if (state.screen === Screen.ENTER_DETAILS) return renderEnterDetails();
   if (state.screen === Screen.RULES) return renderRules();
   if (state.screen === Screen.START) return renderStart();
   if (state.screen === Screen.QUIZ) return renderQuiz();

@@ -3,13 +3,12 @@
 Touch-screen Integrity campaign game per **Game Rules - Digital Game.docx** and **Final Questions** Excel.
 
 ## Player flow
-1. **Enter Name**
-2. **Enter Employee ID**
-3. **Game Rules** — Word of Honor instructions
-4. **Start Game**
-5. **Question 1** — Answer the question
-6. **Find the word**
-7. Repeat for remaining questions (Question 2, etc.)
+1. **Enter Name + Employee ID** (one page)
+2. **Game Rules** — Word of Honor instructions
+3. **Start Game**
+4. **Question 1** — Answer the question
+5. **Find the word**
+6. Repeat for remaining questions (Question 2, etc.)
 
 ## Game flow (4 interactive rounds)
 1. **MCQ 1** — Select the correct answer to unlock **Keyword Game 1** (+25 pts).
