@@ -88,6 +88,8 @@ button {
   --max-w: min(1200px, 100%);
   --header-h: clamp(58px, 8vh, 72px);
 
+  position: relative;
+  isolation: isolate;
   min-height: 100vh;
   min-height: 100dvh;
   color: var(--pp-ink);
@@ -112,9 +114,82 @@ button {
   background-attachment: fixed;
 }
 
+.app > .screen {
+  position: relative;
+  z-index: 1;
+}
+
+/* Small screens: landscape bg crops accents — keep orange / green / blue visible */
 @media (max-width: 900px) {
   .app {
     background-attachment: scroll;
+    background-size: auto 115%;
+    background-position: 42% 18%;
+    background-image:
+      radial-gradient(ellipse 70% 40% at 0% 8%, rgba(255, 122, 26, 0.35), transparent 55%),
+      radial-gradient(ellipse 65% 38% at 100% 6%, rgba(46, 204, 113, 0.32), transparent 55%),
+      radial-gradient(ellipse 70% 42% at 0% 92%, rgba(46, 196, 255, 0.34), transparent 55%),
+      radial-gradient(ellipse 50% 30% at 70% 100%, rgba(245, 197, 24, 0.2), transparent 55%),
+      url("./assets/bg.png");
+  }
+
+  .app::before {
+    content: "";
+    position: fixed;
+    z-index: 0;
+    pointer-events: none;
+    width: clamp(72px, 22vw, 110px);
+    height: clamp(10px, 2.4vw, 14px);
+    border-radius: 999px;
+    background: var(--pp-orange);
+    top: 11%;
+    left: -6%;
+    transform: rotate(-38deg);
+    box-shadow:
+      /* green — top right */
+      78vw -2vh 0 0 var(--pp-green),
+      86vw 3vh 0 -2px var(--pp-green);
+  }
+
+  .app::after {
+    content: "";
+    position: fixed;
+    z-index: 0;
+    pointer-events: none;
+    width: clamp(88px, 26vw, 130px);
+    height: clamp(10px, 2.4vw, 14px);
+    border-radius: 999px;
+    background: var(--pp-cyan);
+    bottom: 12%;
+    left: -8%;
+    transform: rotate(-38deg);
+    box-shadow:
+      /* yellow accent near bottom */
+      52vw 10vh 0 -1px var(--pp-yellow),
+      /* thin white edge accent */
+      70vw 14vh 0 -3px rgba(255, 255, 255, 0.85);
+  }
+}
+
+@media (max-width: 480px) {
+  .app {
+    background-size: auto 125%;
+    background-position: 38% 12%;
+  }
+
+  .app::before {
+    top: 10%;
+    left: -10%;
+    width: 78px;
+    height: 11px;
+    box-shadow: 72vw -1vh 0 0 var(--pp-green);
+  }
+
+  .app::after {
+    bottom: 10%;
+    left: -12%;
+    width: 96px;
+    height: 11px;
   }
 }
 
