@@ -559,9 +559,13 @@ async function answerQuiz(optionIndex) {
 
   beep("good");
   const kwLabel = wordFindLabel(state.questionIndex);
-  state.feedback = { type: "good", text: `${mcqLabel} correct! +${quizPts} pts — ${kwLabel}` };
+  state.feedback = {
+    type: "good",
+    text: `${mcqLabel} correct! — ${kwLabel}`,
+    points: quizPts,
+  };
   render();
-  await delay(1100);
+  await delay(1400);
   if (state.screen !== Screen.QUIZ) return;
   state.feedback = null;
   state.quizReveal = null;
@@ -618,14 +622,18 @@ async function onWordSelected(matchIdx) {
     beep("good");
     state.currentRound.word = full;
     state.revealTarget = true;
-    state.feedback = { type: "good", text: `Keyword found! +${full} pts` };
+    state.feedback = {
+      type: "good",
+      text: "Keyword found!",
+      points: full,
+    };
     render();
     paintTargetReveal();
     document.querySelectorAll(".cell.reveal").forEach((el) => {
       el.classList.remove("reveal");
       el.classList.add("foundA");
     });
-    await delay(1300);
+    await delay(1600);
     if (state.screen !== Screen.WORDFIND) return;
     state.feedback = null;
     state.revealTarget = false;
@@ -827,7 +835,21 @@ function renderFeedback() {
   if (!state.feedback || state.feedback.type === "bad" || state.feedback.type === "warn") {
     return "";
   }
-  return `<div class="feedback feedback-${state.feedback.type}">${escapeHtml(state.feedback.text)}</div>`;
+  const pts = Number(state.feedback.points) || 0;
+  const sparks = Array.from({ length: 12 }, (_, i) => {
+    const angle = (i / 12) * 360;
+    return `<span class="pts-spark" style="--a:${angle}deg;--d:${0.35 + (i % 4) * 0.08}s;--h:${i % 3}"></span>`;
+  }).join("");
+  return `
+    <div class="pts-celebration" aria-live="polite">
+      <div class="pts-burst" aria-hidden="true">${sparks}</div>
+      <div class="pts-pop">
+        <span class="pts-plus">+</span><span class="pts-num">${pts}</span>
+        <span class="pts-label">pts</span>
+      </div>
+      <div class="feedback feedback-good feedback-animated">${escapeHtml(state.feedback.text)}</div>
+    </div>
+  `;
 }
 
 function buildGridHtml(gridData, interactive = true) {
@@ -1052,7 +1074,7 @@ function renderQuiz() {
       ${renderHeader(
         "",
         "",
-        `<span class="chip chip-strong">Score ${displayScore()}</span> ${playerChip()}`,
+        `<span class="chip chip-strong${state.feedback?.points ? " chip-score-pop" : ""}">Score ${displayScore()}</span> ${playerChip()}`,
       )}
       <div class="screen-body quiz-body">
         ${renderBrandBanner()}
@@ -1097,7 +1119,7 @@ function renderWordFind() {
       ${renderHeader(
         "",
         "",
-        `<span class="chip chip-strong">Score ${displayScore()}</span> ${playerChip()}`,
+        `<span class="chip chip-strong${state.feedback?.points ? " chip-score-pop" : ""}">Score ${displayScore()}</span> ${playerChip()}`,
       )}
       <div class="screen-body wordfind-body">
         ${renderBrandBanner()}
