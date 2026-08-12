@@ -37,20 +37,22 @@
 }
 
 html,
+html {
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
   overscroll-behavior: none;
   touch-action: manipulation;
-}
-
-html {
-  touch-action: manipulation;
-}
-
-body {
-  overflow-x: hidden;
-  overflow-y: auto;
   background: #5f259f;
 }
 
@@ -90,8 +92,10 @@ button {
 
   position: relative;
   isolation: isolate;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
   color: var(--pp-ink);
   font-family: "PhonePe Sans", "Segoe UI", system-ui, sans-serif;
   font-size: 16px;
@@ -197,8 +201,10 @@ button {
 .screen {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
 }
 
 .screen-body {
@@ -208,10 +214,11 @@ button {
   width: 100%;
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 8px clamp(12px, 3vw, 28px) clamp(12px, 2.5vh, 28px);
+  padding: clamp(4px, 1vh, 8px) clamp(12px, 3vw, 28px) clamp(8px, 1.6vh, 20px);
   padding-left: max(clamp(12px, 3vw, 28px), env(safe-area-inset-left));
   padding-right: max(clamp(12px, 3vw, 28px), env(safe-area-inset-right));
   min-height: 0;
+  overflow: hidden;
 }
 
 /* ── Header ── */
@@ -220,10 +227,11 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: var(--header-h);
-  padding: 10px max(clamp(14px, 3vw, 28px), env(safe-area-inset-right))
-    10px max(clamp(14px, 3vw, 28px), env(safe-area-inset-left));
-  padding-top: max(10px, env(safe-area-inset-top));
+  min-height: unset;
+  height: clamp(48px, 7vh, 72px);
+  padding: clamp(6px, 1vh, 10px) max(clamp(14px, 3vw, 28px), env(safe-area-inset-right))
+    clamp(6px, 1vh, 10px) max(clamp(14px, 3vw, 28px), env(safe-area-inset-left));
+  padding-top: max(clamp(6px, 1vh, 10px), env(safe-area-inset-top));
   background: linear-gradient(180deg, rgba(28, 10, 55, 0.55), rgba(28, 10, 55, 0.28));
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -316,7 +324,7 @@ button {
   background: var(--pp-glass);
   border: 1px solid rgba(255, 255, 255, 0.65);
   border-radius: var(--radius);
-  padding: clamp(16px, 3vw, 28px);
+  padding: clamp(12px, 2vh, 28px);
   box-shadow: var(--pp-shadow);
 }
 
@@ -349,7 +357,7 @@ button {
   margin: 0;
   display: block;
   width: 100%;
-  font-size: clamp(28px, 4.8vw, 44px);
+  font-size: clamp(22px, 4.2vh, 44px);
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.15;
@@ -438,9 +446,9 @@ button {
   gap: 8px;
   border-radius: 16px;
   font-weight: 700;
-  font-size: 17px;
+  font-size: clamp(15px, 2.2vh, 17px);
   padding: 0 28px;
-  min-height: 58px;
+  min-height: clamp(46px, 6.5vh, 58px);
   transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
   touch-action: manipulation;
 }
@@ -460,9 +468,9 @@ button {
 }
 
 .btn-hero {
-  min-height: 64px;
+  min-height: clamp(48px, 7vh, 64px);
   width: min(340px, 100%);
-  font-size: 18px;
+  font-size: clamp(16px, 2.4vh, 18px);
 }
 
 /* ── Onboarding / forms ── */
@@ -473,35 +481,45 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* Center title + white panel as one block; keep fixed gap between them */
   justify-content: center;
   flex: 1;
   min-height: 0;
-  gap: 28px;
+  overflow: hidden;
+  gap: clamp(8px, 2vh, 28px);
 }
 
 .screen-wordfind .wordfind-body {
   justify-content: flex-start;
-  gap: 10px;
+  gap: clamp(4px, 1vh, 10px);
 }
 
 .form-card,
-.rules-panel {
+.rules-panel,
+.quiz-card,
+.end-score-card {
   width: min(780px, 100%);
+  max-height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   animation: riseIn 0.4s ease-out;
 }
 
 .form-card {
-  padding: clamp(20px, 3.2vw, 32px) clamp(18px, 3vw, 28px) clamp(22px, 3.2vw, 32px);
+  padding: clamp(12px, 2.2vh, 28px) clamp(14px, 3vw, 28px);
+}
+
+.rules-panel {
+  padding: clamp(12px, 2vh, 24px) clamp(14px, 3vw, 28px);
 }
 
 .form-card .btn-primary,
 .rules-panel .btn-primary,
 .end-score-card .btn-primary {
   align-self: center;
-  margin-top: 18px;
+  margin-top: clamp(8px, 1.5vh, 18px);
+  flex-shrink: 0;
 }
 
 @keyframes riseIn {
@@ -516,23 +534,26 @@ button {
 }
 
 .form-title {
-  margin: 0 0 8px;
-  font-size: clamp(26px, 4.5vw, 36px);
+  margin: 0 0 clamp(4px, 0.8vh, 8px);
+  font-size: clamp(22px, 3.6vh, 36px);
   font-weight: 800;
   letter-spacing: -0.03em;
   color: var(--pp-purple);
+  flex-shrink: 0;
 }
 
 .form-lead {
-  margin: 0 0 22px;
+  margin: 0 0 clamp(10px, 1.8vh, 22px);
   color: var(--pp-muted);
-  font-size: clamp(14px, 2.4vw, 16px);
-  line-height: 1.55;
+  font-size: clamp(13px, 2vh, 16px);
+  line-height: 1.45;
+  flex-shrink: 0;
 }
 
 .player-form {
   display: grid;
-  gap: 14px;
+  gap: clamp(8px, 1.4vh, 14px);
+  min-height: 0;
 }
 
 @media (min-width: 720px) {
@@ -555,7 +576,8 @@ button {
 
 .field-group {
   display: grid;
-  gap: 8px;
+  gap: 6px;
+  min-height: 0;
 }
 
 .field-label {
@@ -568,7 +590,7 @@ button {
 
 .field-input {
   width: 100%;
-  min-height: 56px;
+  min-height: clamp(44px, 6vh, 56px);
   padding: 0 16px;
   border: 2px solid var(--pp-line);
   border-radius: var(--radius-sm);
@@ -595,40 +617,44 @@ button {
 }
 
 .rules-flow {
-  margin: 0 0 20px;
+  margin: 0 0 clamp(8px, 1.5vh, 20px);
   padding-left: 1.2rem;
   display: grid;
-  gap: 10px;
+  gap: clamp(4px, 1vh, 10px);
   color: var(--pp-ink);
-  font-size: clamp(14px, 2.3vw, 16px);
+  font-size: clamp(13px, 2vh, 16px);
+  min-height: 0;
 }
 
 .rules-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 22px;
+  gap: clamp(8px, 1.2vh, 12px);
+  margin-bottom: clamp(8px, 1.6vh, 22px);
+  min-height: 0;
 }
 
 .rules-box {
   background: linear-gradient(160deg, #f8f3ff, #eef9ff);
   border: 1px solid var(--pp-line);
   border-radius: var(--radius-sm);
-  padding: 14px;
+  padding: clamp(8px, 1.4vh, 14px);
+  min-height: 0;
 }
 
 .rules-box-title {
   font-weight: 700;
   color: var(--pp-purple);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  font-size: clamp(13px, 1.8vh, 15px);
 }
 
 .rules-mini {
   margin: 0;
   padding-left: 1.1rem;
   display: grid;
-  gap: 4px;
-  font-size: 13px;
+  gap: 2px;
+  font-size: clamp(11px, 1.6vh, 13px);
   color: var(--pp-muted);
 }
 
@@ -640,8 +666,10 @@ button {
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: clamp(14px, 2.5vh, 28px);
-  padding: clamp(12px, 3vh, 36px) 12px;
+  gap: clamp(8px, 1.8vh, 28px);
+  padding: clamp(6px, 1.5vh, 36px) 12px;
+  min-height: 0;
+  overflow: hidden;
   animation: riseIn 0.45s ease-out;
 }
 
@@ -662,13 +690,14 @@ button {
 .start-hero-title {
   margin: 0;
   max-width: 900px;
-  font-size: clamp(34px, 6vw, 58px);
+  font-size: clamp(26px, 5vh, 58px);
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1.05;
   color: #fff;
   text-align: center;
   text-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
 }
 
 .start-hero-title span {
@@ -694,18 +723,21 @@ button {
 .steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  gap: clamp(8px, 1.4vh, 14px);
   width: 100%;
   max-width: 920px;
+  min-height: 0;
+  flex-shrink: 1;
 }
 
 .step {
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: var(--radius-sm);
-  padding: 18px 16px;
+  padding: clamp(10px, 1.6vh, 18px) clamp(12px, 1.5vw, 16px);
   text-align: left;
   box-shadow: 0 12px 30px rgba(20, 8, 40, 0.18);
+  min-height: 0;
 }
 
 .step-num {
@@ -743,23 +775,29 @@ button {
 }
 
 .quiz-question {
-  margin: 8px 0 10px;
-  font-size: clamp(18px, 2.8vw, 26px);
+  margin: clamp(4px, 0.8vh, 8px) 0 clamp(4px, 0.8vh, 10px);
+  font-size: clamp(16px, 2.6vh, 26px);
   font-weight: 800;
   letter-spacing: -0.02em;
-  line-height: 1.3;
+  line-height: 1.25;
   color: var(--pp-ink);
+  flex-shrink: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .quiz-hint {
-  margin: 0 0 18px;
+  margin: 0 0 clamp(8px, 1.4vh, 18px);
   color: var(--pp-muted);
-  font-size: 14px;
+  font-size: clamp(12px, 1.6vh, 14px);
+  flex-shrink: 0;
 }
 
 .quiz-options {
   display: grid;
-  gap: 10px;
+  gap: clamp(6px, 1vh, 10px);
+  min-height: 0;
+  overflow: hidden;
 }
 
 .quiz-option {
@@ -767,14 +805,14 @@ button {
   align-items: flex-start;
   gap: 14px;
   width: 100%;
-  min-height: 64px;
-  padding: 14px 16px;
+  min-height: clamp(44px, 6vh, 64px);
+  padding: clamp(8px, 1.2vh, 14px) 16px;
   text-align: left;
   background: #fff;
   border: 2px solid var(--pp-line);
   border-radius: var(--radius-sm);
   color: var(--pp-ink);
-  font-size: clamp(14px, 2.2vw, 16px);
+  font-size: clamp(13px, 2vh, 16px);
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(28, 18, 48, 0.05);
   transition: border-color 0.12s, background 0.12s, transform 0.1s;
@@ -1127,18 +1165,21 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-height: 100%;
+  min-height: 0;
+  overflow: hidden;
   animation: riseIn 0.4s ease-out;
 }
 
 .player-recap {
-  font-size: 14px;
+  font-size: clamp(12px, 1.6vh, 14px);
   font-weight: 600;
   color: var(--pp-muted);
-  margin-bottom: 8px;
+  margin-bottom: clamp(4px, 0.8vh, 8px);
 }
 
 .final-score {
-  font-size: clamp(56px, 12vw, 84px);
+  font-size: clamp(42px, 9vh, 84px);
   font-weight: 900;
   color: var(--pp-purple);
   line-height: 0.95;
@@ -1146,28 +1187,30 @@ button {
 }
 
 .final-score-label {
-  font-size: 15px;
+  font-size: clamp(12px, 1.6vh, 15px);
   color: var(--pp-muted);
-  margin: 6px 0 4px;
+  margin: clamp(2px, 0.6vh, 6px) 0 clamp(2px, 0.5vh, 4px);
 }
 
 .end-feedback {
-  font-size: clamp(22px, 4vw, 32px);
+  font-size: clamp(18px, 3.2vh, 32px);
   font-weight: 800;
   color: var(--pp-purple);
-  margin-bottom: 20px;
+  margin-bottom: clamp(8px, 1.6vh, 20px);
 }
 
 .score-breakdown {
   width: 100%;
   display: grid;
-  gap: 10px;
+  gap: clamp(6px, 1vh, 10px);
   text-align: left;
-  margin-bottom: 22px;
+  margin-bottom: clamp(8px, 1.6vh, 22px);
+  min-height: 0;
+  overflow: hidden;
 }
 
 .score-row {
-  padding: 14px;
+  padding: clamp(8px, 1.2vh, 14px);
   border-radius: var(--radius-sm);
   background: #fff;
   border: 1px solid var(--pp-line);
@@ -1231,14 +1274,18 @@ button {
     max-width: 36vw;
   }
   .steps {
-    grid-template-columns: 1fr;
-    max-width: 420px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: min(100%, 560px);
   }
   .steps .step:last-child:nth-child(odd) {
     grid-column: auto;
   }
+  .step-desc {
+    font-size: 11px;
+    line-height: 1.3;
+  }
   .rules-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
   .header-meta .chip:not(.chip-strong) {
     display: none;
@@ -1250,13 +1297,57 @@ button {
     display: none;
   }
   .logo-img {
-    width: clamp(112px, 40vw, 140px);
+    width: clamp(100px, 34vw, 140px);
   }
   .start-hero-title {
-    font-size: clamp(30px, 9vw, 40px);
+    font-size: clamp(24px, 5vh, 40px);
   }
   .field-input {
     font-size: 16px;
+  }
+  .step-num {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+  .step-title {
+    font-size: 13px;
+  }
+}
+
+/* Fit all screens into viewport height — no page scroll */
+@media (max-height: 820px) {
+  .form-body,
+  .rules-body,
+  .end-body,
+  .quiz-body,
+  .start-hero {
+    gap: clamp(6px, 1.2vh, 14px);
+  }
+  .panel-kicker {
+    margin-bottom: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+}
+
+@media (max-height: 740px) {
+  .rules-grid {
+    display: none;
+  }
+  .rules-flow {
+    margin-bottom: 8px;
+  }
+  .start-hero .lead {
+    display: none;
+  }
+  .step-desc {
+    display: none;
+  }
+  .brand-banner-sub {
+    margin-top: 2px;
+    font-size: clamp(12px, 1.8vh, 15px);
   }
 }
 
@@ -1268,12 +1359,20 @@ button {
   .screen-wordfind .progress-bar {
     display: none;
   }
+  .form-lead {
+    display: none;
+  }
+  .quiz-hint {
+    display: none;
+  }
 }
 
 @media (max-height: 560px) and (orientation: landscape) {
   .start-hero {
-    justify-content: flex-start;
-    gap: 10px;
+    justify-content: center;
+    gap: 6px;
+    padding-top: 4px;
+    padding-bottom: 4px;
   }
   .steps {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1284,6 +1383,12 @@ button {
   }
   .wordfind-layout {
     grid-template-columns: 1fr;
+  }
+  .brand-banner-title {
+    font-size: clamp(18px, 5vh, 28px);
+  }
+  .rules-flow li:nth-child(n + 3) {
+    display: none;
   }
 }
 
