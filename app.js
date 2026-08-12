@@ -506,13 +506,8 @@ function startWordFind() {
     const seed = state.puzzleVariant * 1000 + state.questionIndex * 37 + 11;
     state.gridData = generateWordSearch(keywords, cfg.grid ?? {}, seed);
   } catch {
-    state.feedback = { type: "bad", text: "Puzzle error — skipping to next question" };
     state.currentRound.word = 0;
-    render();
-    setTimeout(() => {
-      state.feedback = null;
-      finishRound();
-    }, 1400);
+    finishRound();
     return;
   }
 
@@ -588,17 +583,16 @@ function paintTargetReveal() {
   });
 }
 
-async function revealKeywordThenFinish(message, type = "bad", waitMs = 2800) {
+async function revealKeywordThenFinish(_message, _type = "bad", waitMs = 2200) {
   state.revealTarget = true;
   state.selecting = false;
   state.selStart = null;
   state.selEnd = null;
-  state.feedback = { type, text: message };
+  state.feedback = null;
   render();
   paintTargetReveal();
   await delay(waitMs);
   if (state.screen !== Screen.WORDFIND) return;
-  state.feedback = null;
   state.revealTarget = false;
   finishRound();
 }
@@ -655,12 +649,11 @@ async function onWordSelected(matchIdx) {
   state.selecting = false;
   state.selStart = null;
   state.selEnd = null;
-  state.feedback = { type: "bad", text: "Not a valid word — try again" };
+  state.feedback = null;
   flashBad();
   render();
-  await delay(900);
+  await delay(500);
   if (state.screen !== Screen.WORDFIND) return;
-  state.feedback = null;
   state.locked = false;
   render();
 }
@@ -824,7 +817,10 @@ function updateWordFindTimerUI() {
 }
 
 function renderFeedback() {
-  if (!state.feedback) return "";
+  // Never show red/warn overlay toasts — only brief success feedback.
+  if (!state.feedback || state.feedback.type === "bad" || state.feedback.type === "warn") {
+    return "";
+  }
   return `<div class="feedback feedback-${state.feedback.type}">${escapeHtml(state.feedback.text)}</div>`;
 }
 
@@ -853,8 +849,8 @@ function buildGridHtml(gridData, interactive = true) {
   return html;
 }
 
-function renderFlowStep(step, total, label) {
-  return `<div class="flow-step">Step ${step} of ${total} · ${label}</div>`;
+function renderFlowStep(_step, _total, _label) {
+  return "";
 }
 
 function renderFormError() {
@@ -876,7 +872,7 @@ function attachFormSubmit(selector, onSubmit) {
 function renderEnterDetails() {
   $app.innerHTML = `
     <div class="screen">
-      ${renderHeader("PhonePe Integrity", "Word of Honor", renderFlowStep(1, 3, "Your details"))}
+      ${renderHeader("PhonePe Integrity", "Word of Honor", playerChip())}
       <div class="screen-body form-body">
         <div class="card card-sm form-card">
           <h2 class="form-title">Enter your details</h2>
@@ -932,7 +928,7 @@ function renderRules() {
   const wordSec = cfg.wordFindSeconds ?? 20;
   $app.innerHTML = `
     <div class="screen">
-      ${renderHeader("PhonePe Integrity", "Game Rules", renderFlowStep(2, 3, "How to Play"))}
+      ${renderHeader("PhonePe Integrity", "Game Rules", playerChip())}
       <div class="screen-body rules-body">
         <div class="card card-sm rules-panel">
           <h2 class="form-title">Word of Honor</h2>
@@ -985,7 +981,7 @@ function renderStart() {
   const total = roundsPerGame();
   $app.innerHTML = `
     <div class="screen">
-      ${renderHeader("PhonePe Integrity", "Start Game", `${renderFlowStep(3, 3, "Ready")} ${playerChip()}`)}
+      ${renderHeader("PhonePe Integrity", "Start Game", playerChip())}
       <div class="start-hero">
         <h1>Ready to play, <span>${escapeHtml(state.playerName)}</span>?</h1>
         <p class="lead">

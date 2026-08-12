@@ -343,6 +343,8 @@ button {
   color: #fff;
   min-width: min(240px, 100%);
   width: min(320px, 100%);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .btn-primary:active {
@@ -379,6 +381,19 @@ button {
 .rules-panel {
   width: min(760px, 100%);
   animation: riseIn 0.35s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+.rules-panel .btn-primary,
+.form-card .btn-primary,
+.end-score-card .btn-primary {
+  align-self: center;
+  display: inline-flex;
+  width: min(320px, 100%);
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @keyframes riseIn {
@@ -457,8 +472,9 @@ button {
 
 .player-form .btn-primary {
   margin-top: var(--space-md);
-  width: 100%;
-  max-width: none;
+  width: min(320px, 100%);
+  max-width: 320px;
+  justify-self: center;
 }
 
 .field-label {
@@ -716,8 +732,8 @@ button {
   }
 
   .btn-primary {
-    width: 100%;
-    max-width: 100%;
+    width: min(320px, 100%);
+    max-width: min(320px, 100%);
   }
 
   .end-score-card {
@@ -1476,14 +1492,9 @@ button {
   color: #fff;
 }
 
-.feedback-bad {
-  background: var(--pp-bad);
-  color: #fff;
-}
-
+.feedback-bad,
 .feedback-warn {
-  background: var(--pp-warn);
-  color: #fff;
+  display: none !important;
 }
 
 /* ── End score screen ── */
@@ -1491,6 +1502,13 @@ button {
   max-width: 640px;
   margin: 0 auto;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.end-score-card .score-breakdown {
+  width: 100%;
 }
 
 .final-score {
