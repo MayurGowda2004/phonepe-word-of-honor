@@ -1261,6 +1261,15 @@ function renderWordFind() {
     </div>
   `;
   attachGridHandlers();
+  syncWordfindLayout();
+}
+
+function syncWordfindLayout() {
+  const el = document.querySelector(".screen-wordfind");
+  if (!el) return;
+  const vertical = window.innerHeight >= window.innerWidth || window.innerWidth <= 900;
+  el.classList.toggle("is-vertical", vertical);
+  el.classList.toggle("is-horizontal", !vertical);
 }
 
 function renderEnd() {
@@ -1416,4 +1425,6 @@ function updateGridSelectionUI() {
   window.addEventListener("pointerdown", () => {
     if (state.screen === Screen.END) scheduleIdleReset();
   });
+  window.addEventListener("resize", syncWordfindLayout);
+  window.addEventListener("orientationchange", () => setTimeout(syncWordfindLayout, 80));
 })();

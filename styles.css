@@ -1134,103 +1134,99 @@ button {
   font-weight: 700;
 }
 
-/* Horizontal: rules stay on the LEFT of the crossword */
-@media (orientation: landscape) {
-  .puzzle-rules {
-    display: none !important;
-  }
-  .wordfind-layout {
-    display: grid;
-    grid-template-columns: minmax(210px, 280px) minmax(0, 1fr);
-    align-items: stretch;
-  }
-  .rules-card {
-    display: block;
-    height: 100%;
-    order: -1;
-  }
-  .puzzle-card {
-    order: 1;
-    min-height: 0;
-  }
+/* Wide horizontal: rules on the LEFT */
+.screen-wordfind.is-horizontal .puzzle-rules {
+  display: none !important;
+}
+.screen-wordfind.is-horizontal .wordfind-layout {
+  display: grid;
+  grid-template-columns: minmax(210px, 280px) minmax(0, 1fr);
+  align-items: stretch;
+}
+.screen-wordfind.is-horizontal .rules-card {
+  display: block !important;
+  height: 100%;
+  order: -1;
+}
+.screen-wordfind.is-horizontal .puzzle-card {
+  order: 1;
+  min-height: 0;
 }
 
-/* Vertical: rules go BELOW the crossword, never beside it */
-@media (orientation: portrait) {
-  .wordfind-layout {
-    display: flex;
-    flex-direction: column;
-  }
-  .puzzle-card {
-    flex: 1 1 auto;
-    min-height: 0;
-    gap: 8px;
-  }
-  .puzzle-top {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .find-target {
-    margin-bottom: 0;
-  }
-  .grid-section {
-    flex: 0 1 auto;
-    min-height: 0;
-  }
-  .grid-fit {
-    flex: 0 0 auto;
-    height: auto;
-    width: 100%;
-    container-type: inline-size;
-    display: block;
-  }
-  .grid {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1;
-    max-width: 100%;
-    max-height: min(58vh, 100%);
-  }
-  .cell {
-    font-size: clamp(10px, calc(100cqw / var(--cols, 12) * 0.48), 22px);
-  }
-  .rules-card {
-    display: none;
-  }
-  .puzzle-rules {
-    display: block;
-    flex: 1 1 auto;
-    min-height: 0;
-    margin-top: 2px;
-    padding: 10px 12px;
-    border-radius: var(--radius-sm);
-    background: linear-gradient(160deg, #f8f3ff, #eef9ff);
-    border: 1px solid var(--pp-line);
-    overflow: hidden;
-  }
-  .puzzle-rules .section-label {
-    margin-bottom: 6px;
-  }
-  .rules-list-compact {
-    margin: 0;
-    padding-left: 1.1rem;
-    display: grid;
-    gap: 4px;
-    font-size: clamp(12px, 1.8vh, 14px);
-    line-height: 1.4;
-  }
-  .rules-list-compact li {
-    margin: 0;
-  }
-  .grid-hint {
-    display: block;
-    margin: 0;
-  }
+/* Vertical / narrow: rules BELOW the crossword */
+.screen-wordfind.is-vertical .wordfind-layout {
+  display: flex !important;
+  flex-direction: column;
+}
+.screen-wordfind.is-vertical .puzzle-card {
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 8px;
+}
+.screen-wordfind.is-vertical .puzzle-top {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.screen-wordfind.is-vertical .find-target {
+  margin-bottom: 0;
+}
+.screen-wordfind.is-vertical .grid-section {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+.screen-wordfind.is-vertical .grid-fit {
+  flex: 0 0 auto;
+  height: auto;
+  width: 100%;
+  container-type: inline-size;
+  display: block;
+}
+.screen-wordfind.is-vertical .grid {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  max-width: 100%;
+  max-height: min(58vh, 100%);
+}
+.screen-wordfind.is-vertical .cell {
+  font-size: clamp(10px, calc(100cqw / var(--cols, 12) * 0.48), 22px);
+}
+.screen-wordfind.is-vertical .rules-card {
+  display: none !important;
+}
+.screen-wordfind.is-vertical .puzzle-rules {
+  display: block !important;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-top: 2px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(160deg, #f8f3ff, #eef9ff);
+  border: 1px solid var(--pp-line);
+  overflow: hidden;
+}
+.screen-wordfind.is-vertical .puzzle-rules .section-label {
+  margin-bottom: 6px;
+}
+.screen-wordfind.is-vertical .rules-list-compact {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 4px;
+  font-size: clamp(12px, 1.8vh, 14px);
+  line-height: 1.4;
+}
+.screen-wordfind.is-vertical .rules-list-compact li {
+  margin: 0;
+}
+.screen-wordfind.is-vertical .grid-hint {
+  display: block;
+  margin: 0;
 }
 
-@media (orientation: portrait) and (max-height: 700px) {
-  .puzzle-rules .rules-list-compact li:nth-child(2) {
+@media (max-height: 700px) {
+  .screen-wordfind.is-vertical .puzzle-rules .rules-list-compact li:nth-child(2) {
     display: none;
   }
 }
@@ -1623,7 +1619,7 @@ button {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     max-width: 100%;
   }
-  .wordfind-layout {
+  .screen-wordfind.is-horizontal .wordfind-layout {
     grid-template-columns: minmax(170px, 220px) minmax(0, 1fr);
   }
   .screen-wordfind .rules-card .quiz-recap {
@@ -1752,7 +1748,7 @@ button {
   .start-hero-title {
     font-size: 60px;
   }
-  .wordfind-layout {
+  .screen-wordfind.is-horizontal .wordfind-layout {
     grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
   }
 }
