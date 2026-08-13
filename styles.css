@@ -552,26 +552,9 @@ button {
 
 .player-form {
   display: grid;
-  gap: clamp(8px, 1.4vh, 14px);
+  grid-template-columns: 1fr;
+  gap: clamp(10px, 1.6vh, 16px);
   min-height: 0;
-}
-
-@media (min-width: 720px) {
-  .player-form {
-    grid-template-columns: 1fr 1fr;
-    column-gap: 16px;
-  }
-
-  .player-form .field-group:nth-child(1) {
-    grid-column: 1;
-  }
-  .player-form .field-group:nth-child(2) {
-    grid-column: 2;
-  }
-  .player-form .form-error,
-  .player-form .btn-primary {
-    grid-column: 1 / -1;
-  }
 }
 
 .field-group {
