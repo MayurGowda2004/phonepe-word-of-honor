@@ -924,6 +924,7 @@ function updateWordFindTimerUI() {
   const totalMs = (cfg.wordFindSeconds ?? 20) * 1000;
   const host = document.querySelector("[data-timer-host]");
   if (host) host.innerHTML = renderTimerBlock(state.remainingMs, totalMs);
+  window.__ppTagUi?.();
 }
 
 function renderFeedback() {
@@ -1239,6 +1240,11 @@ function renderWordFind() {
                 <li>Both game keywords are in the crossword</li>
                 <li>Correct → <strong>+${pts} pts</strong> · Wrong / timeout → <strong>0 pts</strong></li>
               </ul>
+              <div class="quiz-recap">
+                <div class="section-label">You answered</div>
+                <p class="recap-q">${escapeHtml(q.clue)}</p>
+                <p class="recap-a">✓ ${escapeHtml(answerLabel)}</p>
+              </div>
             </div>
           </div>
           <div class="panel rules-card">
@@ -1320,12 +1326,13 @@ function renderEnd() {
 
 function render() {
   if (!cfg) return;
-  if (state.screen === Screen.ENTER_DETAILS) return renderEnterDetails();
-  if (state.screen === Screen.RULES) return renderRules();
-  if (state.screen === Screen.START) return renderStart();
-  if (state.screen === Screen.QUIZ) return renderQuiz();
-  if (state.screen === Screen.WORDFIND) return renderWordFind();
-  if (state.screen === Screen.END) return renderEnd();
+  if (state.screen === Screen.ENTER_DETAILS) renderEnterDetails();
+  else if (state.screen === Screen.RULES) renderRules();
+  else if (state.screen === Screen.START) renderStart();
+  else if (state.screen === Screen.QUIZ) renderQuiz();
+  else if (state.screen === Screen.WORDFIND) renderWordFind();
+  else if (state.screen === Screen.END) renderEnd();
+  window.__ppTagUi?.();
 }
 
 // ---- Grid touch handlers ----
@@ -1427,4 +1434,10 @@ function updateGridSelectionUI() {
   });
   window.addEventListener("resize", syncWordfindLayout);
   window.addEventListener("orientationchange", () => setTimeout(syncWordfindLayout, 80));
+  try {
+    const design = await import("./design.js?v=54");
+    window.__ppTagUi = () => design.tagUi();
+    design.bootDesignStudio();
+    design.tagUi();
+  } catch {}
 })();
