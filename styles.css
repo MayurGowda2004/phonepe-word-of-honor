@@ -36,7 +36,6 @@
   box-sizing: border-box;
 }
 
-html,
 html {
   height: 100%;
   height: 100dvh;
@@ -83,10 +82,13 @@ button {
   --pp-ink: #1a1228;
   --pp-muted: #6b6280;
   --pp-line: rgba(95, 37, 159, 0.16);
-  --pp-glass: rgba(255, 255, 255, 0.94);
+  --pp-glass: rgba(255, 255, 255, 0.96);
   --pp-shadow: 0 18px 50px rgba(20, 8, 40, 0.28);
-  --radius: 20px;
-  --radius-sm: 14px;
+  --pp-good: #2ecc71;
+  --pp-warn: #f5c518;
+  --pp-bad: #e74c3c;
+  --radius: 22px;
+  --radius-sm: 16px;
   --max-w: min(1200px, 100%);
   --header-h: clamp(58px, 8vh, 72px);
 
@@ -228,14 +230,14 @@ button {
   justify-content: space-between;
   gap: 12px;
   min-height: unset;
-  height: clamp(48px, 7vh, 72px);
-  padding: clamp(6px, 1vh, 10px) max(clamp(14px, 3vw, 28px), env(safe-area-inset-right))
-    clamp(6px, 1vh, 10px) max(clamp(14px, 3vw, 28px), env(safe-area-inset-left));
-  padding-top: max(clamp(6px, 1vh, 10px), env(safe-area-inset-top));
-  background: linear-gradient(180deg, rgba(28, 10, 55, 0.55), rgba(28, 10, 55, 0.28));
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  height: clamp(52px, 7vh, 76px);
+  padding: clamp(8px, 1.2vh, 12px) max(clamp(16px, 3vw, 32px), env(safe-area-inset-right))
+    clamp(8px, 1.2vh, 12px) max(clamp(16px, 3vw, 32px), env(safe-area-inset-left));
+  padding-top: max(clamp(8px, 1.2vh, 12px), env(safe-area-inset-top));
+  background: linear-gradient(180deg, rgba(22, 8, 48, 0.62), rgba(22, 8, 48, 0.22));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
   color: #fff;
   flex-shrink: 0;
 }
@@ -301,20 +303,22 @@ button {
 .chip {
   display: inline-flex;
   align-items: center;
-  padding: 7px 14px;
+  padding: 8px 16px;
   border-radius: 999px;
   font-size: 13px;
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.14);
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.16);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(12, 4, 28, 0.18);
 }
 
 .chip-strong {
   background: #fff;
   color: var(--pp-purple);
   border-color: transparent;
+  box-shadow: 0 8px 22px rgba(12, 4, 28, 0.22);
 }
 
 /* ── Panels ── */
@@ -322,10 +326,12 @@ button {
 .card,
 .card-sm {
   background: var(--pp-glass);
-  border: 1px solid rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.78);
   border-radius: var(--radius);
-  padding: clamp(12px, 2vh, 28px);
-  box-shadow: var(--pp-shadow);
+  padding: clamp(14px, 2.2vh, 30px);
+  box-shadow:
+    0 22px 60px rgba(16, 6, 36, 0.28),
+    0 2px 0 rgba(255, 255, 255, 0.65) inset;
 }
 
 .panel-kicker {
@@ -357,21 +363,22 @@ button {
   margin: 0;
   display: block;
   width: 100%;
-  font-size: clamp(22px, 4.2vh, 44px);
+  font-size: clamp(24px, 4.4vh, 48px);
   font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
   color: #fff;
   text-align: center;
-  text-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+  text-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
 }
 
 .brand-banner-sub {
-  margin: 6px 0 0;
-  font-size: clamp(14px, 2.4vw, 18px);
+  margin: 8px 0 0;
+  font-size: clamp(13px, 2.2vw, 17px);
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
-  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.88);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   text-align: center;
 }
 
@@ -434,22 +441,25 @@ button {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border-radius: 16px;
-  font-weight: 700;
+  border-radius: 999px;
+  font-weight: 800;
   font-size: clamp(15px, 2.2vh, 17px);
-  padding: 0 28px;
-  min-height: clamp(46px, 6.5vh, 58px);
-  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+  padding: 0 30px;
+  min-height: clamp(48px, 6.6vh, 60px);
+  letter-spacing: 0.01em;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease;
   touch-action: manipulation;
 }
 
 .btn-primary {
-  background: linear-gradient(180deg, #6d2fba 0%, var(--pp-purple) 100%);
+  background: linear-gradient(180deg, #7a36cc 0%, var(--pp-purple) 100%);
   color: #fff;
-  width: min(300px, 100%);
+  width: min(320px, 100%);
   margin-left: auto;
   margin-right: auto;
-  box-shadow: 0 10px 28px rgba(95, 37, 159, 0.4);
+  box-shadow:
+    0 12px 28px rgba(95, 37, 159, 0.42),
+    0 1px 0 rgba(255, 255, 255, 0.22) inset;
 }
 
 .btn-primary:active {
@@ -581,16 +591,16 @@ button {
 .field-input {
   box-sizing: border-box;
   width: 100%;
-  height: clamp(48px, 6.2vh, 56px);
-  min-height: clamp(48px, 6.2vh, 56px);
+  height: clamp(50px, 6.4vh, 58px);
+  min-height: clamp(50px, 6.4vh, 58px);
   padding: 0 18px;
   border: 2px solid var(--pp-line);
-  border-radius: var(--radius-sm);
+  border-radius: 16px;
   background: #fff;
   font-family: "PhonePe Sans", "Segoe UI", system-ui, sans-serif;
   font-size: 17px;
   font-weight: 400;
-  line-height: clamp(44px, 5.6vh, 52px);
+  line-height: clamp(46px, 5.8vh, 54px);
   color: var(--pp-ink);
   letter-spacing: 0.01em;
   text-align: left;
@@ -736,12 +746,12 @@ button {
 }
 
 .step {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.78);
   border-radius: var(--radius-sm);
-  padding: clamp(10px, 1.6vh, 18px) clamp(12px, 1.5vw, 16px);
+  padding: clamp(12px, 1.8vh, 20px) clamp(14px, 1.6vw, 18px);
   text-align: left;
-  box-shadow: 0 12px 30px rgba(20, 8, 40, 0.18);
+  box-shadow: 0 14px 34px rgba(20, 8, 40, 0.2);
   min-height: 0;
 }
 
@@ -810,17 +820,17 @@ button {
   align-items: flex-start;
   gap: 14px;
   width: 100%;
-  min-height: clamp(44px, 6vh, 64px);
-  padding: clamp(8px, 1.2vh, 14px) 16px;
+  min-height: clamp(48px, 6.2vh, 66px);
+  padding: clamp(10px, 1.3vh, 16px) 16px;
   text-align: left;
   background: #fff;
   border: 2px solid var(--pp-line);
-  border-radius: var(--radius-sm);
+  border-radius: 18px;
   color: var(--pp-ink);
   font-size: clamp(13px, 2vh, 16px);
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(28, 18, 48, 0.05);
-  transition: border-color 0.12s, background 0.12s, transform 0.1s;
+  box-shadow: 0 4px 14px rgba(28, 18, 48, 0.06);
+  transition: border-color 0.12s, background 0.12s, transform 0.1s, box-shadow 0.12s;
   touch-action: manipulation;
 }
 
