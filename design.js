@@ -24,11 +24,12 @@ const COMMON_PROPS = [
   "box-shadow",
   "text-align",
   "display",
+  "zoom",
 ];
 
 const TOKEN_GROUPS = [
   ["Brand", ["--pp-purple", "--pp-purple-deep", "--pp-cyan", "--pp-green", "--pp-yellow", "--pp-orange", "--pp-red", "--pp-ink", "--pp-muted", "--pp-white"]],
-  ["Layout", ["--radius", "--radius-sm", "--ui-panel-bg", "--ui-panel-radius", "--ui-panel-pad"]],
+  ["Layout", ["--ui-page-zoom", "--radius", "--radius-sm", "--ui-panel-bg", "--ui-panel-radius", "--ui-panel-pad"]],
   ["Header", ["--ui-header-h", "--ui-header-bg", "--ui-logo-w", "--ui-chip-bg", "--ui-chip-color", "--ui-chip-pad", "--ui-chip-size"]],
   ["Title", ["--ui-banner-title-size", "--ui-banner-title-color", "--ui-banner-sub-size", "--ui-banner-sub-color"]],
   ["Keyword", ["--ui-keyword-bg", "--ui-keyword-border", "--ui-keyword-pad", "--ui-keyword-radius", "--ui-keyword-label-size", "--ui-keyword-label-color", "--ui-keyword-text-size", "--ui-keyword-text-color"]],
@@ -118,6 +119,10 @@ function injectChrome() {
     #pp-designer .pp-actions { display: flex; gap: 6px; flex-wrap: wrap; }
     #pp-designer .pp-actions button { background: #5f259f; color: #fff; }
     #pp-designer .pp-hint { margin: 0; color: #c8bddc; font-size: 12px; }
+    #pp-designer [data-zoom-out], #pp-designer [data-zoom-in] {
+      background: #5f259f; color: #fff; min-width: 40px;
+    }
+    #pp-designer [data-zoom-label] { display: block; margin-top: 4px; color: #9ee7ff; font-weight: 700; }
     #pp-fab {
       position: fixed; z-index: 99998; right: 14px; bottom: 14px; width: 48px; height: 48px;
       border: 0; border-radius: 50%; background: #5f259f; color: #fff; font-weight: 800; font-size: 18px;
@@ -145,6 +150,16 @@ function injectChrome() {
       <button type="button" class="pp-x" data-close aria-label="Close">×</button>
     </header>
     <div class="pp-body">
+      <div class="pp-group">
+        <h4>Chrome page zoom</h4>
+        <p class="pp-hint">Property: <code>zoom</code> / token <code>--ui-page-zoom</code>. Keyboard: Ctrl + and Ctrl − (Ctrl 0 reset).</p>
+        <div class="pp-row pp-3">
+          <button type="button" data-zoom-out>−</button>
+          <input data-zoom type="range" min="0.7" max="1.5" step="0.05" />
+          <button type="button" data-zoom-in>+</button>
+        </div>
+        <small data-zoom-label>100%</small>
+      </div>
       <p class="pp-hint">Chrome DevTools also works: F12 → Elements → click a <code>data-ui</code> node, or edit tokens on <code>.app</code>.</p>
       <div>
         <label>Component</label>
@@ -181,8 +196,33 @@ function injectChrome() {
   });
   panel.querySelector("[data-tokens]").addEventListener("input", onTokenInput);
   panel.querySelector("[data-el-fields]").addEventListener("input", onElPropInput);
+  panel.querySelector("[data-zoom]").addEventListener("input", (e) => setPageZoom(Number(e.target.value)));
+  panel.querySelector("[data-zoom-in]").addEventListener("click", () => nudgeZoom(0.05));
+  panel.querySelector("[data-zoom-out]").addEventListener("click", () => nudgeZoom(-0.05));
 
   document.addEventListener("click", onInspectClick, true);
+}
+
+function currentZoom() {
+  const raw = state.vars["--ui-page-zoom"];
+  const n = Number(raw);
+  return Number.isFinite(n) && n > 0 ? n : 1;
+}
+
+function setPageZoom(n) {
+  const z = Math.min(1.5, Math.max(0.7, Math.round(n * 20) / 20));
+  if (z === 1) delete state.vars["--ui-page-zoom"];
+  else state.vars["--ui-page-zoom"] = String(z);
+  saveState();
+  const panel = document.getElementById("pp-designer");
+  const slider = panel?.querySelector("[data-zoom]");
+  const label = panel?.querySelector("[data-zoom-label]");
+  if (slider) slider.value = String(z);
+  if (label) label.textContent = `${Math.round(z * 100)}%`;
+}
+
+function nudgeZoom(delta) {
+  setPageZoom(currentZoom() + delta);
 }
 
 function setOpen(open) {
@@ -279,6 +319,12 @@ function renderPanel() {
   if (!panel || panel.classList.contains("pp-hidden")) return;
   const names = currentNames();
   const pick = panel.querySelector("[data-pick]");
+  const z = currentZoom();
+  const slider = panel.querySelector("[data-zoom]");
+  const label = panel.querySelector("[data-zoom-label]");
+  if (slider) slider.value = String(z);
+  if (label) label.textContent = `${Math.round(z * 100)}%`;
+
   pick.innerHTML = `<option value="">— choose component —</option>` + names.map((n) =>
     `<option value="${n}" ${n === selectedName ? "selected" : ""}>${n}</option>`,
   ).join("");
@@ -387,6 +433,8 @@ export function bootDesignStudio() {
   applyOverrides();
   const params = new URLSearchParams(location.search);
   if (params.get("design") === "1" || localStorage.getItem("phonepe_design_mode") === "1") {
+    const meta = document.querySelector('meta[name="viewport"]');
+    if (meta) meta.setAttribute("content", "width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes, viewport-fit=cover");
     setOpen(true);
   }
   window.addEventListener("keydown", (e) => {

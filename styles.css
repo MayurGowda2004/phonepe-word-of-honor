@@ -105,6 +105,7 @@ button {
   --ui-banner-sub-size: clamp(13px, 2.2vw, 17px);
   --ui-banner-sub-color: rgba(255, 255, 255, 0.88);
 
+  --ui-page-zoom: 1;
   --ui-panel-bg: var(--pp-glass);
   --ui-panel-radius: var(--radius);
   --ui-panel-pad: clamp(14px, 2.2vh, 30px);
@@ -155,6 +156,7 @@ button {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  zoom: var(--ui-page-zoom);
   background-color: var(--pp-purple);
   /* Full brand art — boost orange / green / cyan accent lines */
   background-image:

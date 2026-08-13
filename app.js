@@ -1435,7 +1435,7 @@ function updateGridSelectionUI() {
   window.addEventListener("resize", syncWordfindLayout);
   window.addEventListener("orientationchange", () => setTimeout(syncWordfindLayout, 80));
   try {
-    const design = await import("./design.js?v=54");
+    const design = await import("./design.js?v=55");
     window.__ppTagUi = () => design.tagUi();
     design.bootDesignStudio();
     design.tagUi();
