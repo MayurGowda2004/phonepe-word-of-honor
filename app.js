@@ -793,6 +793,8 @@ function finishRound() {
 }
 
 const SCORE_DB_KEY = "phonepe_score_db";
+const SCORE_IDB_NAME = "phonepe_kiosk_db";
+const SCORE_IDB_STORE = "scores";
 
 function loadScoreDb() {
   try {
@@ -806,6 +808,83 @@ function loadScoreDb() {
 
 function saveScoreDb(list) {
   localStorage.setItem(SCORE_DB_KEY, JSON.stringify(list));
+}
+
+function openScoreIdb() {
+  return new Promise((resolve, reject) => {
+    if (!window.indexedDB) return reject(new Error("IndexedDB unavailable"));
+    const req = indexedDB.open(SCORE_IDB_NAME, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(SCORE_IDB_STORE)) {
+        const store = db.createObjectStore(SCORE_IDB_STORE, { keyPath: "id" });
+        store.createIndex("employeeId", "employeeId", { unique: false });
+        store.createIndex("at", "at", { unique: false });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function idbPutScore(rec) {
+  return openScoreIdb().then(
+    (db) =>
+      new Promise((resolve, reject) => {
+        const tx = db.transaction(SCORE_IDB_STORE, "readwrite");
+        tx.objectStore(SCORE_IDB_STORE).put(rec);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      }),
+  );
+}
+
+function idbGetAllScores() {
+  return openScoreIdb().then(
+    (db) =>
+      new Promise((resolve, reject) => {
+        const tx = db.transaction(SCORE_IDB_STORE, "readonly");
+        const req = tx.objectStore(SCORE_IDB_STORE).getAll();
+        req.onsuccess = () => resolve(Array.isArray(req.result) ? req.result : []);
+        req.onerror = () => reject(req.error);
+      }),
+  );
+}
+
+function idbReplaceAllScores(list) {
+  return openScoreIdb().then(
+    (db) =>
+      new Promise((resolve, reject) => {
+        const tx = db.transaction(SCORE_IDB_STORE, "readwrite");
+        const store = tx.objectStore(SCORE_IDB_STORE);
+        store.clear();
+        list.forEach((rec) => store.put(rec));
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      }),
+  );
+}
+
+async function hydrateScoreDb() {
+  try {
+    const local = loadScoreDb();
+    let idb = [];
+    try {
+      idb = await idbGetAllScores();
+    } catch {}
+    const map = new Map();
+    [...local, ...idb].forEach((r) => {
+      if (r?.id) map.set(String(r.id), r);
+    });
+    const merged = [...map.values()].sort((a, b) => String(a.at || "").localeCompare(String(b.at || "")));
+    saveScoreDb(merged);
+    try {
+      await idbReplaceAllScores(merged);
+    } catch {}
+    return merged;
+  } catch {
+    return loadScoreDb();
+  }
 }
 
 function saveScoreRecord() {
@@ -825,6 +904,7 @@ function saveScoreRecord() {
   const list = loadScoreDb();
   list.push(rec);
   saveScoreDb(list);
+  idbPutScore(rec).catch(() => {});
   fetch("/api/scores", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -1004,7 +1084,7 @@ function buildGridHtml(gridData, interactive = true) {
   const revealSet = state.revealTarget
     ? new Set(getTargetPlacementCells().map((p) => `${p.r},${p.c}`))
     : new Set();
-  let html = `<div class="grid-fit" data-ui="grid-fit"><div class="grid${large}" data-ui="grid" data-grid data-cols="${size}" style="--cols:${size}">`;
+  let html = `<div class="grid-fit" data-ui="grid-fit"><div class="grid${large}" data-ui="grid" data-grid data-cols="${size}" style="--cols:${size};--rows:${size}">`;
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
       const key = `${r},${c}`;
@@ -1408,7 +1488,8 @@ function downloadScoreCsv(list) {
   URL.revokeObjectURL(url);
 }
 
-function renderRecords() {
+async function renderRecords() {
+  await hydrateScoreDb();
   const q = String(document.querySelector("[data-records-q]")?.value || "").trim().toLowerCase();
   const all = loadScoreDb().slice().reverse();
   const list = q
@@ -1437,8 +1518,9 @@ function renderRecords() {
       <div class="screen-body form-body">
         ${renderBrandBanner()}
         <div class="panel records-card">
-          <div class="panel-kicker">Score database</div>
+          <div class="panel-kicker">Local database</div>
           <h2 class="form-title">Player records</h2>
+          <p class="form-lead">Saved on this kiosk only · Name, Employee ID, Score</p>
           <div class="records-toolbar">
             <input data-records-q type="search" placeholder="Search name or Employee ID" value="${escapeHtml(q)}" />
             <button class="btn btn-primary" type="button" data-csv>Download CSV</button>
@@ -1463,9 +1545,12 @@ function renderRecords() {
   search?.addEventListener("input", () => renderRecords());
   search?.focus();
   document.querySelector("[data-csv]")?.addEventListener("pointerdown", () => downloadScoreCsv(list));
-  document.querySelector("[data-clear-db]")?.addEventListener("pointerdown", () => {
+  document.querySelector("[data-clear-db]")?.addEventListener("pointerdown", async () => {
     if (!confirm("Clear all score records on this kiosk?")) return;
     saveScoreDb([]);
+    try {
+      await idbReplaceAllScores([]);
+    } catch {}
     renderRecords();
   });
 }
@@ -1568,6 +1653,7 @@ function updateGridSelectionUI() {
 // ---- Boot ----
 (async function main() {
   hardenKiosk();
+  hydrateScoreDb().catch(() => {});
   try {
     cfg = await loadConfig();
     goStart();

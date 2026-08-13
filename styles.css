@@ -1073,19 +1073,26 @@ button {
   border-radius: 16px;
   touch-action: none;
   grid-template-columns: repeat(var(--cols, 12), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--rows, 12), minmax(0, 1fr));
 }
 
 .cell {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  padding: 0;
   border-radius: clamp(3px, 0.7vmin, 8px);
   border: 1px solid rgba(95, 37, 159, 0.14);
   background: #fff;
   color: var(--pp-ink);
   font-weight: 700;
-  font-size: clamp(8px, calc(min(100cqw, 100cqh) / var(--cols, 12) * 0.42), 20px);
+  container-type: size;
+  font-size: clamp(7px, 52cqmin, 18px);
   line-height: 1;
   transition: background 0.1s, color 0.1s, transform 0.1s, box-shadow 0.1s;
 }
@@ -1243,7 +1250,7 @@ button {
   aspect-ratio: unset;
 }
 .screen-wordfind.is-vertical .cell {
-  font-size: clamp(10px, calc(min(100cqw, 100cqh) / var(--cols, 12) * 0.46), 22px);
+  font-size: clamp(7px, 52cqmin, 18px);
 }
 .screen-wordfind.is-vertical .rules-card {
   display: none !important;
@@ -1260,7 +1267,7 @@ button {
   border-radius: var(--radius-sm);
   background: linear-gradient(160deg, #f8f3ff, #eef9ff);
   border: 1px solid var(--pp-line);
-  overflow: hidden;
+  overflow: auto;
 }
 .screen-wordfind.is-vertical .puzzle-rules .section-label {
   margin-bottom: 4px;
@@ -1285,13 +1292,15 @@ button {
 .screen-wordfind.is-vertical .puzzle-footer-recap .recap-q {
   margin: 0 0 4px;
   font-size: clamp(11px, 1.5vh, 13px);
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  display: block;
+  overflow: visible;
+  white-space: normal;
+  word-break: break-word;
 }
 .screen-wordfind.is-vertical .puzzle-footer-recap .recap-a {
   font-size: clamp(11px, 1.5vh, 13px);
+  white-space: normal;
+  word-break: break-word;
 }
 .screen-wordfind.is-vertical .grid-hint {
   display: block;
@@ -1315,9 +1324,6 @@ button {
 @media (max-height: 700px) {
   .screen-wordfind.is-vertical .puzzle-rules .rules-list-compact li:nth-child(2) {
     display: none;
-  }
-  .screen-wordfind.is-vertical .puzzle-footer-recap .recap-q {
-    -webkit-line-clamp: 2;
   }
 }
 
