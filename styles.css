@@ -865,6 +865,49 @@ button {
   pointer-events: none;
 }
 
+/* Locked-in quiz layout from design mode */
+@media (min-width: 880px) and (min-height: 680px) {
+  .screen-quiz .quiz-body {
+    gap: 4px;
+    justify-content: flex-start;
+  }
+  .screen-quiz .brand-banner-title {
+    position: relative;
+    left: -3px;
+    top: -37px;
+  }
+  .screen-quiz .brand-banner-sub {
+    position: relative;
+    left: -1px;
+    top: -35px;
+  }
+  .screen-quiz .quiz-card {
+    width: min(633px, 100%) !important;
+    height: min(615px, calc(100dvh - 120px)) !important;
+  }
+  .screen-quiz .quiz-option {
+    width: min(572px, 100%);
+    height: 110px;
+    min-height: 110px;
+    align-items: center;
+  }
+  .screen-quiz .opt-text {
+    width: min(487px, 100%);
+    height: 72px;
+    position: relative;
+    left: -6px;
+    top: 2px;
+    padding-top: 0;
+    display: flex;
+    align-items: center;
+  }
+  .screen-quiz .opt-letter {
+    position: relative;
+    left: -5px;
+    top: 5px;
+  }
+}
+
 /* ── Timer ── */
 .timer-block {
   display: flex;
@@ -1798,6 +1841,80 @@ button {
   .screen-wordfind.is-horizontal .wordfind-layout {
     grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
   }
+}
+
+/* ── Score records DB ── */
+.records-card {
+  width: min(960px, 100%);
+  max-height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.records-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.records-toolbar input {
+  flex: 1 1 180px;
+  min-height: 42px;
+  border: 1px solid var(--pp-line);
+  border-radius: 12px;
+  padding: 0 12px;
+  font: inherit;
+}
+.records-toolbar .btn {
+  min-height: 42px;
+  padding: 0 16px;
+  width: auto;
+  font-size: 14px;
+}
+.records-count {
+  margin: 0 0 10px;
+  color: var(--pp-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+.records-table-wrap {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  border: 1px solid var(--pp-line);
+  border-radius: 14px;
+  background: #fff;
+}
+.records-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.records-table th,
+.records-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--pp-line);
+  white-space: nowrap;
+}
+.records-table th {
+  position: sticky;
+  top: 0;
+  background: #f6f0ff;
+  color: var(--pp-purple);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.records-table tr:last-child td {
+  border-bottom: 0;
+}
+.records-empty {
+  margin: 24px;
+  text-align: center;
+  color: var(--pp-muted);
 }
 
 @media (prefers-reduced-motion: reduce) {

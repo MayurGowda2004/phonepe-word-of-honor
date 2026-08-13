@@ -483,6 +483,8 @@ let state = {
   quizReveal: null,
   shuffledQuiz: null,
   revealTarget: false,
+  scoreSaved: false,
+  endHomeTimer: null,
 };
 
 function playerChip() {
@@ -552,6 +554,8 @@ function clearTimers() {
   state.wordFindTimer = null;
   if (state.idleResetTimer) clearTimeout(state.idleResetTimer);
   state.idleResetTimer = null;
+  if (state.endHomeTimer) clearInterval(state.endHomeTimer);
+  state.endHomeTimer = null;
 }
 
 function scheduleIdleReset() {
@@ -583,6 +587,7 @@ function startGame() {
   state.quizReveal = null;
   state.shuffledQuiz = null;
   state.revealTarget = false;
+  state.scoreSaved = false;
   state.screen = Screen.QUIZ;
   render();
 }
@@ -787,8 +792,49 @@ function finishRound() {
   }
 }
 
+const SCORE_DB_KEY = "phonepe_score_db";
+
+function loadScoreDb() {
+  try {
+    const raw = localStorage.getItem(SCORE_DB_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveScoreDb(list) {
+  localStorage.setItem(SCORE_DB_KEY, JSON.stringify(list));
+}
+
+function saveScoreRecord() {
+  if (state.scoreSaved) return;
+  if (!state.playerName && !state.employeeId) return;
+  state.scoreSaved = true;
+  const rec = {
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    name: String(state.playerName || "").trim(),
+    employeeId: String(state.employeeId || "").trim(),
+    score: Number(state.totalScore) || 0,
+    maxScore: roundsPerGame() * sectionPoints() * 2,
+    feedback: getScoreFeedback(state.totalScore),
+    at: new Date().toISOString(),
+    rounds: state.roundScores || [],
+  };
+  const list = loadScoreDb();
+  list.push(rec);
+  saveScoreDb(list);
+  fetch("/api/scores", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(rec),
+  }).catch(() => {});
+}
+
 function endGame() {
   clearTimers();
+  saveScoreRecord();
   state.screen = Screen.END;
   scheduleIdleReset();
   render();
@@ -812,6 +858,7 @@ function goStart() {
   state.quizReveal = null;
   state.shuffledQuiz = null;
   state.revealTarget = false;
+  state.scoreSaved = false;
   render();
 }
 
@@ -1283,7 +1330,7 @@ function renderEnd() {
   const pts = sectionPoints();
   const maxScore = roundsPerGame() * pts * 2;
   const feedback = getScoreFeedback(state.totalScore);
-  const left = cfg.idleResetSeconds ?? 10;
+  let left = cfg.idleResetSeconds ?? 10;
 
   const rows = state.roundScores
     .map((r, i) => {
@@ -1307,7 +1354,7 @@ function renderEnd() {
       ${renderHeader(
         "",
         "",
-        `<span class="chip">Resets ~${left}s</span> ${playerChip()}`,
+        `<span class="chip" data-home-left>Home in ${left}s</span> ${playerChip()}`,
       )}
       <div class="screen-body end-body">
         ${renderBrandBanner()}
@@ -1317,16 +1364,115 @@ function renderEnd() {
           <div class="final-score-label">out of ${maxScore}</div>
           <div class="end-feedback">${escapeHtml(feedback)}</div>
           <div class="score-breakdown">${rows}</div>
-          <button class="btn btn-primary" data-new>Play Again</button>
+          <p class="player-recap">Returning home…</p>
         </div>
       </div>
     </div>
   `;
-  document.querySelector("[data-new]")?.addEventListener("pointerdown", () => goReady());
+  state.endHomeTimer = setInterval(() => {
+    left -= 1;
+    const chip = document.querySelector("[data-home-left]");
+    if (chip) chip.textContent = left > 0 ? `Home in ${left}s` : "Going home…";
+    if (left <= 0 && state.endHomeTimer) {
+      clearInterval(state.endHomeTimer);
+      state.endHomeTimer = null;
+    }
+  }, 1000);
+}
+
+function formatRecordTime(iso) {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+  } catch {
+    return iso || "";
+  }
+}
+
+function downloadScoreCsv(list) {
+  const header = ["Time", "Name", "Employee ID", "Score", "Max", "Feedback"];
+  const lines = [
+    header.join(","),
+    ...list.map((r) =>
+      [r.at, r.name, r.employeeId, r.score, r.maxScore, r.feedback]
+        .map((v) => `"${String(v ?? "").replaceAll('"', '""')}"`)
+        .join(","),
+    ),
+  ];
+  const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `phonepe-scores-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function renderRecords() {
+  const q = String(document.querySelector("[data-records-q]")?.value || "").trim().toLowerCase();
+  const all = loadScoreDb().slice().reverse();
+  const list = q
+    ? all.filter(
+        (r) =>
+          String(r.name || "").toLowerCase().includes(q) ||
+          String(r.employeeId || "").toLowerCase().includes(q),
+      )
+    : all;
+  const rows = list
+    .map(
+      (r) => `
+      <tr>
+        <td>${escapeHtml(formatRecordTime(r.at))}</td>
+        <td>${escapeHtml(r.name || "")}</td>
+        <td>${escapeHtml(r.employeeId || "")}</td>
+        <td><strong>${Number(r.score) || 0}</strong> / ${Number(r.maxScore) || 0}</td>
+        <td>${escapeHtml(r.feedback || "")}</td>
+      </tr>`,
+    )
+    .join("");
+
+  $app.innerHTML = `
+    <div class="screen">
+      ${renderHeader("", "", `<span class="chip">${all.length} records</span>`)}
+      <div class="screen-body form-body">
+        ${renderBrandBanner()}
+        <div class="panel records-card">
+          <div class="panel-kicker">Score database</div>
+          <h2 class="form-title">Player records</h2>
+          <div class="records-toolbar">
+            <input data-records-q type="search" placeholder="Search name or Employee ID" value="${escapeHtml(q)}" />
+            <button class="btn btn-primary" type="button" data-csv>Download CSV</button>
+            <button class="btn" type="button" data-clear-db style="background:#f4ecff;color:var(--pp-purple)">Clear</button>
+          </div>
+          <p class="records-count">${list.length} of ${all.length} games</p>
+          <div class="records-table-wrap">
+            ${
+              rows
+                ? `<table class="records-table">
+              <thead><tr><th>Time</th><th>Name</th><th>Employee ID</th><th>Score</th><th>Result</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>`
+                : `<p class="records-empty">No scores yet. Play a game to add a record.</p>`
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  const search = document.querySelector("[data-records-q]");
+  search?.addEventListener("input", () => renderRecords());
+  search?.focus();
+  document.querySelector("[data-csv]")?.addEventListener("pointerdown", () => downloadScoreCsv(list));
+  document.querySelector("[data-clear-db]")?.addEventListener("pointerdown", () => {
+    if (!confirm("Clear all score records on this kiosk?")) return;
+    saveScoreDb([]);
+    renderRecords();
+  });
 }
 
 function render() {
   if (!cfg) return;
+  if (new URLSearchParams(location.search).get("records") === "1") return renderRecords();
   if (state.screen === Screen.ENTER_DETAILS) return renderEnterDetails();
   if (state.screen === Screen.RULES) return renderRules();
   if (state.screen === Screen.START) return renderStart();
