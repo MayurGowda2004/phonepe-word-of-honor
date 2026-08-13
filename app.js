@@ -4,7 +4,7 @@ const $app = document.getElementById("app");
 function shouldHardenKiosk() {
   const params = new URLSearchParams(location.search);
   if (params.get("kiosk") === "1") return true;
-  if (params.get("debug") === "1") return false;
+  if (params.get("debug") === "1" || params.get("design") === "1") return false;
   return localStorage.getItem("phonepe_kiosk_mode") === "1";
 }
 
@@ -867,11 +867,11 @@ function timerColor(ms, totalMs) {
 
 function renderHeader(_title, _subtitle, chips = "") {
   return `
-    <header class="header">
-      <div class="brand">
-        <img class="logo-img" src="./assets/logo.png" alt="PhonePe" width="148" height="40" />
+    <header class="header" data-ui="header">
+      <div class="brand" data-ui="logo-wrap">
+        <img class="logo-img" data-ui="logo" src="./assets/logo.png" alt="PhonePe" width="148" height="40" />
       </div>
-      <div class="header-meta">${chips}</div>
+      <div class="header-meta" data-ui="header-meta">${chips}</div>
     </header>
   `;
 }
@@ -879,9 +879,9 @@ function renderHeader(_title, _subtitle, chips = "") {
 /** Global page title — outside white panels, on every screen. */
 function renderBrandBanner() {
   return `
-    <div class="brand-banner">
-      <h1 class="brand-banner-title">Word of Honor</h1>
-      <p class="brand-banner-sub">Integrity Challenge</p>
+    <div class="brand-banner" data-ui="brand-banner">
+      <h1 class="brand-banner-title" data-ui="brand-title">Word of Honor</h1>
+      <p class="brand-banner-sub" data-ui="brand-sub">Integrity Challenge</p>
     </div>
   `;
 }
@@ -896,7 +896,7 @@ function renderTimerBlock(remaining, totalMs) {
   const circ = 2 * Math.PI * r;
   const offset = circ * (1 - pct);
   return `
-    <div class="timer-block">
+    <div class="timer-block" data-ui="timer">
       <div class="timer-ring" aria-hidden="true">
         <svg viewBox="0 0 56 56">
           <circle class="track" cx="28" cy="28" r="${r}" />
@@ -924,7 +924,6 @@ function updateWordFindTimerUI() {
   const totalMs = (cfg.wordFindSeconds ?? 20) * 1000;
   const host = document.querySelector("[data-timer-host]");
   if (host) host.innerHTML = renderTimerBlock(state.remainingMs, totalMs);
-  window.__ppTagUi?.();
 }
 
 function renderFeedback() {
@@ -958,7 +957,7 @@ function buildGridHtml(gridData, interactive = true) {
   const revealSet = state.revealTarget
     ? new Set(getTargetPlacementCells().map((p) => `${p.r},${p.c}`))
     : new Set();
-  let html = `<div class="grid-fit"><div class="grid${large}" data-grid data-cols="${size}" style="--cols:${size}">`;
+  let html = `<div class="grid-fit" data-ui="grid-fit"><div class="grid${large}" data-ui="grid" data-grid data-cols="${size}" style="--cols:${size}">`;
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
       const key = `${r},${c}`;
@@ -1000,7 +999,7 @@ function renderEnterDetails() {
       ${renderHeader()}
       <div class="screen-body form-body">
         ${renderBrandBanner()}
-        <div class="panel form-card">
+        <div class="panel form-card" data-ui="form-card">
           <div class="panel-kicker">Player check-in</div>
           <h2 class="form-title">Enter your details</h2>
           <p class="form-lead">Name and Employee ID to begin the Integrity challenge.</p>
@@ -1059,7 +1058,7 @@ function renderRules() {
       ${renderHeader("", "", playerChip())}
       <div class="screen-body rules-body">
         ${renderBrandBanner()}
-        <div class="panel rules-panel">
+        <div class="panel rules-panel" data-ui="rules-panel">
           <div class="panel-kicker">Game rules</div>
           <h2 class="form-title">Play across 4 rounds</h2>
           <p class="form-lead">
@@ -1108,7 +1107,7 @@ function renderStart() {
   $app.innerHTML = `
     <div class="screen screen-ready">
       ${renderHeader("", "", playerChip())}
-      <div class="start-hero">
+      <div class="start-hero" data-ui="start-hero">
         ${renderBrandBanner()}
         <h2 class="start-hero-title">Ready, <span>${escapeHtml(state.playerName)}</span>?</h2>
         <p class="lead">
@@ -1175,7 +1174,7 @@ function renderQuiz() {
       )}
       <div class="screen-body quiz-body">
         ${renderBrandBanner()}
-        <div class="panel quiz-card">
+        <div class="panel quiz-card" data-ui="quiz-card">
           <div class="quiz-meta">
             <span class="quiz-topic">${escapeHtml(q.allegation || "Integrity")}</span>
             <span class="quiz-progress">${qLabel} · ${state.questionIndex + 1} / ${total}</span>
@@ -1221,33 +1220,35 @@ function renderWordFind() {
       <div class="screen-body wordfind-body">
         ${renderBrandBanner()}
         <div class="play-layout wordfind-layout">
-          <div class="panel puzzle-card">
-            <div class="puzzle-top">
+          <div class="panel puzzle-card" data-ui="puzzle-card">
+            <div class="puzzle-top" data-ui="puzzle-top">
               <div data-timer-host>${renderTimerBlock(state.remainingMs, totalMs)}</div>
-              <div class="find-target">
+              <div class="find-target" data-ui="find-target">
                 <span class="find-target-label">Find this keyword</span>
                 <strong>${escapeHtml(categoryLabel)}</strong>
               </div>
             </div>
-            <div class="grid-section">
+            <div class="grid-section" data-ui="grid-section">
               ${gridHtml}
             </div>
-            <p class="grid-hint">Drag left→right or top→bottom · ${keywordCount} keywords hidden</p>
-            <div class="puzzle-rules">
-              <div class="section-label">Rules</div>
-              <ul class="rules-list rules-list-compact">
-                <li>Find this question’s <strong>keyword</strong></li>
-                <li>Both game keywords are in the crossword</li>
-                <li>Correct → <strong>+${pts} pts</strong> · Wrong / timeout → <strong>0 pts</strong></li>
-              </ul>
-              <div class="quiz-recap">
+            <p class="grid-hint" data-ui="grid-hint">Drag left→right or top→bottom · ${keywordCount} keywords hidden</p>
+            <div class="puzzle-rules" data-ui="wordfind-rules">
+              <div class="puzzle-footer-col">
+                <div class="section-label">Rules</div>
+                <ul class="rules-list rules-list-compact">
+                  <li>Find this question’s <strong>keyword</strong></li>
+                  <li>Both game keywords are in the crossword</li>
+                  <li>Correct → <strong>+${pts} pts</strong> · Wrong / timeout → <strong>0 pts</strong></li>
+                </ul>
+              </div>
+              <div class="quiz-recap puzzle-footer-recap" data-ui="wordfind-recap">
                 <div class="section-label">You answered</div>
                 <p class="recap-q">${escapeHtml(q.clue)}</p>
                 <p class="recap-a">✓ ${escapeHtml(answerLabel)}</p>
               </div>
             </div>
           </div>
-          <div class="panel rules-card">
+          <div class="panel rules-card" data-ui="rules-card">
             <div class="section-label">Rules</div>
             <ul class="rules-list">
               <li>Find this question’s <strong>keyword</strong></li>
@@ -1255,7 +1256,7 @@ function renderWordFind() {
               <li>Correct → <strong>+${pts} pts</strong></li>
               <li>Wrong / timeout → <strong>0 pts</strong></li>
             </ul>
-            <div class="quiz-recap">
+            <div class="quiz-recap" data-ui="quiz-recap">
               <div class="section-label">You answered</div>
               <p class="recap-q">${escapeHtml(q.clue)}</p>
               <p class="recap-a">✓ ${escapeHtml(answerLabel)}</p>
@@ -1310,7 +1311,7 @@ function renderEnd() {
       )}
       <div class="screen-body end-body">
         ${renderBrandBanner()}
-        <div class="panel end-score-card">
+        <div class="panel end-score-card" data-ui="end-card">
           <div class="player-recap">${escapeHtml(state.playerName)} · ${escapeHtml(state.employeeId)}</div>
           <div class="final-score">${state.totalScore}</div>
           <div class="final-score-label">out of ${maxScore}</div>
@@ -1326,13 +1327,12 @@ function renderEnd() {
 
 function render() {
   if (!cfg) return;
-  if (state.screen === Screen.ENTER_DETAILS) renderEnterDetails();
-  else if (state.screen === Screen.RULES) renderRules();
-  else if (state.screen === Screen.START) renderStart();
-  else if (state.screen === Screen.QUIZ) renderQuiz();
-  else if (state.screen === Screen.WORDFIND) renderWordFind();
-  else if (state.screen === Screen.END) renderEnd();
-  window.__ppTagUi?.();
+  if (state.screen === Screen.ENTER_DETAILS) return renderEnterDetails();
+  if (state.screen === Screen.RULES) return renderRules();
+  if (state.screen === Screen.START) return renderStart();
+  if (state.screen === Screen.QUIZ) return renderQuiz();
+  if (state.screen === Screen.WORDFIND) return renderWordFind();
+  if (state.screen === Screen.END) return renderEnd();
 }
 
 // ---- Grid touch handlers ----
@@ -1434,10 +1434,4 @@ function updateGridSelectionUI() {
   });
   window.addEventListener("resize", syncWordfindLayout);
   window.addEventListener("orientationchange", () => setTimeout(syncWordfindLayout, 80));
-  try {
-    const design = await import("./design.js?v=55");
-    window.__ppTagUi = () => design.tagUi();
-    design.bootDesignStudio();
-    design.tagUi();
-  } catch {}
 })();

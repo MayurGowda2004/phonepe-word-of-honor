@@ -69,7 +69,7 @@ button {
 }
 
 .app {
-  /* ── Design tokens: edit in Chrome DevTools (F12 → .app) or ?design=1 ── */
+  /* Brand + bg accent palette */
   --pp-purple: #5f259f;
   --pp-purple-deep: #3d1870;
   --pp-purple-soft: #f4ecff;
@@ -92,56 +92,6 @@ button {
   --max-w: min(1200px, 100%);
   --header-h: clamp(58px, 8vh, 72px);
 
-  --ui-header-h: clamp(52px, 7vh, 76px);
-  --ui-header-bg: linear-gradient(180deg, rgba(22, 8, 48, 0.62), rgba(22, 8, 48, 0.22));
-  --ui-logo-w: clamp(118px, 18vw, 156px);
-  --ui-chip-bg: #fff;
-  --ui-chip-color: var(--pp-purple);
-  --ui-chip-pad: 8px 16px;
-  --ui-chip-size: 13px;
-
-  --ui-banner-title-size: clamp(24px, 4.4vh, 48px);
-  --ui-banner-title-color: #fff;
-  --ui-banner-sub-size: clamp(13px, 2.2vw, 17px);
-  --ui-banner-sub-color: rgba(255, 255, 255, 0.88);
-
-  --ui-page-zoom: 1;
-  --ui-panel-bg: var(--pp-glass);
-  --ui-panel-radius: var(--radius);
-  --ui-panel-pad: clamp(14px, 2.2vh, 30px);
-
-  --ui-keyword-bg: linear-gradient(135deg, #f4ecff, #e8f8ff);
-  --ui-keyword-border: 1.5px solid rgba(95, 37, 159, 0.2);
-  --ui-keyword-pad: 10px 12px;
-  --ui-keyword-radius: var(--radius-sm);
-  --ui-keyword-label-size: 11px;
-  --ui-keyword-label-color: var(--pp-muted);
-  --ui-keyword-text-size: clamp(16px, 2.4vh, 22px);
-  --ui-keyword-text-color: var(--pp-purple);
-
-  --ui-grid-bg: #efe8f8;
-  --ui-grid-gap: clamp(1px, 0.35vmin, 4px);
-  --ui-grid-pad: clamp(3px, 0.7vmin, 8px);
-  --ui-grid-radius: 16px;
-  --ui-grid-border: 2px solid rgba(95, 37, 159, 0.18);
-  --ui-cell-bg: #fff;
-  --ui-cell-color: var(--pp-ink);
-  --ui-cell-radius: clamp(3px, 0.7vmin, 8px);
-  --ui-cell-border: 1px solid rgba(95, 37, 159, 0.14);
-
-  --ui-hint-size: 12px;
-  --ui-hint-color: var(--pp-muted);
-
-  --ui-rules-bg: linear-gradient(160deg, #f8f3ff, #eef9ff);
-  --ui-rules-pad: 10px 12px;
-  --ui-rules-radius: var(--radius-sm);
-  --ui-rules-border: 1px solid var(--pp-line);
-  --ui-rules-text-size: clamp(12px, 1.7vh, 14px);
-  --ui-rules-text-color: var(--pp-muted);
-  --ui-rules-gap: 4px;
-  --ui-recap-q-color: var(--pp-ink);
-  --ui-recap-a-color: var(--pp-green);
-
   position: relative;
   isolation: isolate;
   height: 100%;
@@ -156,7 +106,6 @@ button {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  zoom: var(--ui-page-zoom);
   background-color: var(--pp-purple);
   /* Full brand art — boost orange / green / cyan accent lines */
   background-image:
@@ -281,11 +230,11 @@ button {
   justify-content: space-between;
   gap: 12px;
   min-height: unset;
-  height: var(--ui-header-h);
+  height: clamp(52px, 7vh, 76px);
   padding: clamp(8px, 1.2vh, 12px) max(clamp(16px, 3vw, 32px), env(safe-area-inset-right))
     clamp(8px, 1.2vh, 12px) max(clamp(16px, 3vw, 32px), env(safe-area-inset-left));
   padding-top: max(clamp(8px, 1.2vh, 12px), env(safe-area-inset-top));
-  background: var(--ui-header-bg);
+  background: linear-gradient(180deg, rgba(22, 8, 48, 0.62), rgba(22, 8, 48, 0.22));
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
@@ -302,7 +251,7 @@ button {
 
 .logo-img {
   display: block;
-  width: var(--ui-logo-w);
+  width: clamp(118px, 18vw, 156px);
   height: auto;
   flex-shrink: 0;
   object-fit: contain;
@@ -354,9 +303,9 @@ button {
 .chip {
   display: inline-flex;
   align-items: center;
-  padding: var(--ui-chip-pad);
+  padding: 8px 16px;
   border-radius: 999px;
-  font-size: var(--ui-chip-size);
+  font-size: 13px;
   font-weight: 700;
   background: rgba(255, 255, 255, 0.16);
   color: #fff;
@@ -366,8 +315,8 @@ button {
 }
 
 .chip-strong {
-  background: var(--ui-chip-bg);
-  color: var(--ui-chip-color);
+  background: #fff;
+  color: var(--pp-purple);
   border-color: transparent;
   box-shadow: 0 8px 22px rgba(12, 4, 28, 0.22);
 }
@@ -376,10 +325,10 @@ button {
 .panel,
 .card,
 .card-sm {
-  background: var(--ui-panel-bg);
+  background: var(--pp-glass);
   border: 1px solid rgba(255, 255, 255, 0.78);
-  border-radius: var(--ui-panel-radius);
-  padding: var(--ui-panel-pad);
+  border-radius: var(--radius);
+  padding: clamp(14px, 2.2vh, 30px);
   box-shadow:
     0 22px 60px rgba(16, 6, 36, 0.28),
     0 2px 0 rgba(255, 255, 255, 0.65) inset;
@@ -414,20 +363,20 @@ button {
   margin: 0;
   display: block;
   width: 100%;
-  font-size: var(--ui-banner-title-size);
+  font-size: clamp(24px, 4.4vh, 48px);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.12;
-  color: var(--ui-banner-title-color);
+  color: #fff;
   text-align: center;
   text-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
 }
 
 .brand-banner-sub {
   margin: 8px 0 0;
-  font-size: var(--ui-banner-sub-size);
+  font-size: clamp(13px, 2.2vw, 17px);
   font-weight: 600;
-  color: var(--ui-banner-sub-color);
+  color: rgba(255, 255, 255, 0.88);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   text-align: center;
@@ -1003,8 +952,9 @@ button {
 
 .wordfind-layout,
 .play-layout {
-  height: 100%;
+  flex: 1 1 auto;
   min-height: 0;
+  height: auto;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -1013,7 +963,8 @@ button {
 .puzzle-card {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1 1 auto;
+  height: auto;
   min-height: 0;
   overflow: hidden;
   padding: clamp(10px, 1.4vh, 16px);
@@ -1026,26 +977,26 @@ button {
 .find-target {
   text-align: center;
   margin-bottom: 8px;
-  padding: var(--ui-keyword-pad);
-  border-radius: var(--ui-keyword-radius);
-  background: var(--ui-keyword-bg);
-  border: var(--ui-keyword-border);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #f4ecff, #e8f8ff);
+  border: 1.5px solid rgba(95, 37, 159, 0.2);
 }
 
 .find-target-label {
   display: block;
-  font-size: var(--ui-keyword-label-size);
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--ui-keyword-label-color);
+  color: var(--pp-muted);
   margin-bottom: 2px;
 }
 
 .find-target strong {
   display: block;
-  color: var(--ui-keyword-text-color);
-  font-size: var(--ui-keyword-text-size);
+  color: var(--pp-purple);
+  font-size: clamp(16px, 2.4vh, 22px);
   font-weight: 800;
   letter-spacing: -0.02em;
 }
@@ -1072,11 +1023,11 @@ button {
   height: min(100cqw, 100cqh);
   max-width: 100%;
   max-height: 100%;
-  gap: var(--ui-grid-gap);
-  padding: var(--ui-grid-pad);
-  background: var(--ui-grid-bg);
-  border: var(--ui-grid-border);
-  border-radius: var(--ui-grid-radius);
+  gap: clamp(1px, 0.35vmin, 4px);
+  padding: clamp(3px, 0.7vmin, 8px);
+  background: #efe8f8;
+  border: 2px solid rgba(95, 37, 159, 0.18);
+  border-radius: 16px;
   touch-action: none;
   grid-template-columns: repeat(var(--cols, 12), minmax(0, 1fr));
 }
@@ -1086,10 +1037,10 @@ button {
   place-items: center;
   aspect-ratio: 1;
   min-width: 0;
-  border-radius: var(--ui-cell-radius);
-  border: var(--ui-cell-border);
-  background: var(--ui-cell-bg);
-  color: var(--ui-cell-color);
+  border-radius: clamp(3px, 0.7vmin, 8px);
+  border: 1px solid rgba(95, 37, 159, 0.14);
+  background: #fff;
+  color: var(--pp-ink);
   font-weight: 700;
   font-size: clamp(8px, calc(min(100cqw, 100cqh) / var(--cols, 12) * 0.42), 20px);
   line-height: 1;
@@ -1143,8 +1094,8 @@ button {
   flex-shrink: 0;
   margin: 6px 0 0;
   text-align: center;
-  font-size: var(--ui-hint-size);
-  color: var(--ui-hint-color);
+  font-size: 12px;
+  color: var(--pp-muted);
 }
 
 .puzzle-rules {
@@ -1176,12 +1127,12 @@ button {
   margin: 0 0 6px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--ui-recap-q-color);
+  color: var(--pp-ink);
 }
 .recap-a {
   margin: 0;
   font-size: 13px;
-  color: var(--ui-recap-a-color);
+  color: var(--pp-green);
   font-weight: 700;
 }
 
@@ -1204,10 +1155,12 @@ button {
   min-height: 0;
 }
 
-/* Vertical / narrow: rules hug content BELOW the crossword */
+/* Vertical / narrow: rules BELOW the crossword, grid fills leftover space */
 .screen-wordfind.is-vertical .wordfind-layout {
   display: flex !important;
   flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 .screen-wordfind.is-vertical .puzzle-card {
   flex: 1 1 auto;
@@ -1215,22 +1168,26 @@ button {
   gap: 8px;
 }
 .screen-wordfind.is-vertical .puzzle-top {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 .screen-wordfind.is-vertical .find-target {
   margin-bottom: 0;
+  padding: 8px 10px;
 }
 .screen-wordfind.is-vertical .grid-section {
   flex: 1 1 auto;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 .screen-wordfind.is-vertical .grid-fit {
   flex: 1 1 auto;
   min-height: 0;
-  height: auto;
   width: 100%;
+  height: auto;
   container-type: size;
   display: grid;
   place-items: center;
@@ -1238,70 +1195,86 @@ button {
 .screen-wordfind.is-vertical .grid {
   width: min(100cqw, 100cqh);
   height: min(100cqw, 100cqh);
-  aspect-ratio: 1;
   max-width: 100%;
   max-height: 100%;
+  aspect-ratio: unset;
 }
 .screen-wordfind.is-vertical .cell {
-  font-size: clamp(10px, calc(min(100cqw, 100cqh) / var(--cols, 12) * 0.48), 22px);
+  font-size: clamp(10px, calc(min(100cqw, 100cqh) / var(--cols, 12) * 0.46), 22px);
 }
 .screen-wordfind.is-vertical .rules-card {
   display: none !important;
 }
 .screen-wordfind.is-vertical .puzzle-rules {
-  display: flex !important;
-  flex-direction: column;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px 14px;
+  align-items: start;
   flex: 0 0 auto;
-  height: auto;
   min-height: 0;
-  margin: 0;
-  padding: var(--ui-rules-pad);
-  border-radius: var(--ui-rules-radius);
-  background: var(--ui-rules-bg);
-  border: var(--ui-rules-border);
+  margin-top: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(160deg, #f8f3ff, #eef9ff);
+  border: 1px solid var(--pp-line);
   overflow: hidden;
-  gap: 6px;
 }
 .screen-wordfind.is-vertical .puzzle-rules .section-label {
-  margin-bottom: 0;
+  margin-bottom: 4px;
 }
 .screen-wordfind.is-vertical .rules-list-compact {
   margin: 0;
   padding-left: 1.1rem;
   display: grid;
-  gap: var(--ui-rules-gap);
-  font-size: var(--ui-rules-text-size);
+  gap: 3px;
+  font-size: clamp(11px, 1.6vh, 13px);
   line-height: 1.35;
-  color: var(--ui-rules-text-color);
 }
 .screen-wordfind.is-vertical .rules-list-compact li {
   margin: 0;
 }
-.screen-wordfind.is-vertical .puzzle-rules .quiz-recap {
-  border-top: 1px solid var(--pp-line);
-  padding-top: 8px;
-  margin: 0;
+.screen-wordfind.is-vertical .puzzle-footer-recap {
+  border-top: none;
+  padding-top: 0;
+  border-left: 1px solid var(--pp-line);
+  padding-left: 12px;
 }
-.screen-wordfind.is-vertical .puzzle-rules .recap-q,
-.screen-wordfind.is-vertical .puzzle-rules .recap-a {
-  font-size: var(--ui-rules-text-size);
-}
-.screen-wordfind.is-vertical .puzzle-rules .recap-q {
+.screen-wordfind.is-vertical .puzzle-footer-recap .recap-q {
   margin: 0 0 4px;
+  font-size: clamp(11px, 1.5vh, 13px);
   display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+.screen-wordfind.is-vertical .puzzle-footer-recap .recap-a {
+  font-size: clamp(11px, 1.5vh, 13px);
 }
 .screen-wordfind.is-vertical .grid-hint {
   display: block;
   margin: 0;
+  flex-shrink: 0;
+}
+
+@media (max-width: 420px) {
+  .screen-wordfind.is-vertical .puzzle-rules {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .screen-wordfind.is-vertical .puzzle-footer-recap {
+    border-left: none;
+    border-top: 1px solid var(--pp-line);
+    padding-left: 0;
+    padding-top: 8px;
+  }
 }
 
 @media (max-height: 700px) {
   .screen-wordfind.is-vertical .puzzle-rules .rules-list-compact li:nth-child(2) {
     display: none;
+  }
+  .screen-wordfind.is-vertical .puzzle-footer-recap .recap-q {
+    -webkit-line-clamp: 2;
   }
 }
 
