@@ -1069,9 +1069,9 @@ function timerColor(ms, totalMs) {
 function renderHeader(_title, _subtitle, chips = "") {
   return `
     <header class="header" data-ui="header">
-      <div class="brand" data-ui="logo-wrap">
+      <button type="button" class="brand" data-ui="logo-wrap" data-home aria-label="Home">
         <img class="logo-img" data-ui="logo" src="./assets/logo.png" alt="PhonePe" width="148" height="40" />
-      </div>
+      </button>
       <div class="header-meta" data-ui="header-meta">${chips}</div>
     </header>
   `;
@@ -1201,7 +1201,6 @@ function renderEnterDetails() {
       <div class="screen-body form-body">
         ${renderBrandBanner()}
         <div class="panel form-card" data-ui="form-card">
-          <div class="panel-kicker">Player check-in</div>
           <h2 class="form-title">Enter your details</h2>
           <p class="form-lead">Name and Employee ID to begin the Integrity challenge.</p>
           <form class="player-form" data-form="details">
@@ -1246,7 +1245,7 @@ function renderEnterDetails() {
     }
     state.playerName = name;
     state.employeeId = id;
-    goRules();
+    goReady();
   });
 }
 
@@ -1260,7 +1259,6 @@ function renderRules() {
       <div class="screen-body rules-body">
         ${renderBrandBanner()}
         <div class="panel rules-panel" data-ui="rules-panel">
-          <div class="panel-kicker">Game rules</div>
           <h2 class="form-title">Play across 4 rounds</h2>
           <p class="form-lead">
             Answer quizzes, then find integrity keywords on the touch screen.
@@ -1735,6 +1733,11 @@ function updateGridSelectionUI() {
     $app.innerHTML = `<div class="screen"><div class="card card-sm" style="margin:40px auto;max-width:600px">
       <h2>Config error</h2><p>${escapeHtml(err.message)}</p></div></div>`;
   }
+  $app.addEventListener("pointerdown", (e) => {
+    if (!e.target.closest("[data-home]")) return;
+    e.preventDefault();
+    goStart();
+  });
   window.addEventListener("pointerdown", () => {
     if (state.screen === Screen.END) scheduleIdleReset();
   });

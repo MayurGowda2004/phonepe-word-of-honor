@@ -541,9 +541,9 @@
     document.body.appendChild(fab);
   }
 
+  if (!allowed) return;
   applySheet();
   applyTexts();
-  if (!allowed) return;
 
   const start = () => {
     ensureFab();

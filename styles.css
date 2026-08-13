@@ -247,6 +247,12 @@ button {
   align-items: center;
   gap: 14px;
   min-width: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
 .logo-img {
@@ -356,7 +362,8 @@ button {
   width: 100%;
   max-width: 920px;
   text-align: center;
-  padding: 0;
+  padding: 6px 8px 0;
+  overflow: visible;
 }
 
 .brand-banner-title {
@@ -366,10 +373,12 @@ button {
   font-size: clamp(24px, 4.4vh, 48px);
   font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 1.12;
+  line-height: 1.2;
   color: #fff;
   text-align: center;
   text-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
+  overflow: visible;
+  position: static;
 }
 
 .brand-banner-sub {
@@ -868,18 +877,8 @@ button {
 /* Locked-in quiz layout from design mode */
 @media (min-width: 880px) and (min-height: 680px) {
   .screen-quiz .quiz-body {
-    gap: 4px;
+    gap: 10px;
     justify-content: flex-start;
-  }
-  .screen-quiz .brand-banner-title {
-    position: relative;
-    left: -3px;
-    top: -37px;
-  }
-  .screen-quiz .brand-banner-sub {
-    position: relative;
-    left: -1px;
-    top: -35px;
   }
   .screen-quiz .quiz-card {
     width: min(633px, 100%) !important;
