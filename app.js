@@ -1232,6 +1232,14 @@ function renderWordFind() {
               ${gridHtml}
             </div>
             <p class="grid-hint">Drag left→right or top→bottom · ${keywordCount} keywords hidden</p>
+            <div class="puzzle-rules">
+              <div class="section-label">Rules</div>
+              <ul class="rules-list rules-list-compact">
+                <li>Find this question’s <strong>keyword</strong></li>
+                <li>Both game keywords are in the crossword</li>
+                <li>Correct → <strong>+${pts} pts</strong> · Wrong / timeout → <strong>0 pts</strong></li>
+              </ul>
+            </div>
           </div>
           <div class="panel rules-card">
             <div class="section-label">Rules</div>
