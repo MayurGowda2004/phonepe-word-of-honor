@@ -537,6 +537,7 @@ const Screen = {
 
 let cfg;
 let gridAbort = null;
+let recordsOpen = false;
 let state = {
   screen: Screen.ENTER_DETAILS,
   playerName: "",
@@ -995,6 +996,7 @@ function endGame() {
 }
 
 function goStart() {
+  recordsOpen = false;
   clearTimers();
   clearGridHandlers();
   state.screen = Screen.ENTER_DETAILS;
@@ -1593,7 +1595,7 @@ async function renderRecords() {
         <div class="panel records-card">
           <div class="panel-kicker">Local database</div>
           <h2 class="form-title">Player records</h2>
-          <p class="form-lead">Saved on this kiosk only · Name, Employee ID, Score</p>
+          <p class="form-lead">Saved on this kiosk only · Name, Employee ID, Score · Ctrl+D to close</p>
           <div class="records-toolbar">
             <input data-records-q type="search" placeholder="Search name or Employee ID" value="${escapeHtml(q)}" />
             <button class="btn btn-primary" type="button" data-csv>Download CSV</button>
@@ -1630,7 +1632,7 @@ async function renderRecords() {
 
 function render() {
   if (!cfg) return;
-  if (new URLSearchParams(location.search).get("records") === "1") return renderRecords();
+  if (recordsOpen || new URLSearchParams(location.search).get("records") === "1") return renderRecords();
   if (state.screen === Screen.ENTER_DETAILS) return renderEnterDetails();
   if (state.screen === Screen.RULES) return renderRules();
   if (state.screen === Screen.START) return renderStart();
@@ -1744,4 +1746,11 @@ function updateGridSelectionUI() {
   });
   window.addEventListener("resize", syncWordfindLayout);
   window.addEventListener("orientationchange", () => setTimeout(syncWordfindLayout, 80));
+  window.addEventListener("keydown", (e) => {
+    if (!e.ctrlKey || e.altKey || e.shiftKey) return;
+    if (e.code !== "KeyD" && e.key !== "d" && e.key !== "D") return;
+    e.preventDefault();
+    recordsOpen = !recordsOpen;
+    render();
+  });
 })();
