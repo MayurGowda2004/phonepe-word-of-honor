@@ -171,16 +171,21 @@ function shuffleInPlace(arr, rng) {
   return arr;
 }
 
-/** Pick `count` random unique questions, avoiding ones used recently on this kiosk. */
+/** Same clue text = same question to the player, even if category differs. */
 function questionKey(q, fallbackIndex) {
   if (q?.id != null && String(q.id).trim() !== "") return String(q.id);
+  const clue = String(q?.clue || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+  if (clue) return clue;
   const fromFields = `${q?.allegation || ""}::${q?.clue || ""}`;
   return fromFields !== "::" ? fromFields : String(fallbackIndex);
 }
 
-function loadRecentQuestionKeys() {
+function loadRecentList(key) {
   try {
-    const raw = localStorage.getItem("phonepe_recent_questions");
+    const raw = localStorage.getItem(key);
     const list = raw ? JSON.parse(raw) : [];
     return Array.isArray(list) ? list.map(String) : [];
   } catch {
@@ -188,62 +193,97 @@ function loadRecentQuestionKeys() {
   }
 }
 
-function rememberQuestionKeys(keys) {
+function rememberList(key, values, maxKeep) {
   try {
-    const bankSize = cfg?.questions?.length ?? 100;
-    // Keep enough history so questions don't cycle back too quickly.
-    const maxKeep = Math.max(24, Math.min(60, Math.floor(bankSize * 0.55)));
-    const merged = [...loadRecentQuestionKeys(), ...keys.map(String)];
-    localStorage.setItem("phonepe_recent_questions", JSON.stringify(merged.slice(-maxKeep)));
+    const merged = [...loadRecentList(key), ...values.map(String)];
+    localStorage.setItem(key, JSON.stringify(merged.slice(-maxKeep)));
   } catch {}
 }
 
-function pickRoundQuestions(all, count, seed) {
-  const rng = seededRandom(seed ^ (Date.now() & 0xffff));
-  const recent = loadRecentQuestionKeys();
-  const recentSet = new Set(recent);
-  const fresh = [];
-  const stale = [];
+function loadRecentQuestionKeys() {
+  return loadRecentList("phonepe_recent_questions");
+}
 
-  all.forEach((q, i) => {
-    const key = questionKey(q, i);
-    if (recentSet.has(key)) stale.push(i);
-    else fresh.push(i);
+function rememberQuestionKeys(keys) {
+  const bankSize = cfg?.questions?.length ?? 100;
+  const maxKeep = Math.max(bankSize - 4, Math.floor(bankSize * 0.92));
+  rememberList("phonepe_recent_questions", keys, maxKeep);
+}
+
+function loadRecentKeywords() {
+  return loadRecentList("phonepe_recent_keywords");
+}
+
+function rememberKeywords(words) {
+  rememberList("phonepe_recent_keywords", words.filter(Boolean), 12);
+}
+
+function pickRoundQuestions(all, count) {
+  const recentQ = loadRecentQuestionKeys();
+  const recentQSet = new Set(recentQ);
+  const recentKw = loadRecentKeywords();
+  const recentKwSet = new Set(recentKw);
+
+  const items = all.map((q, i) => ({
+    q,
+    key: questionKey(q, i),
+    kw: getCategoryWord(q),
+  }));
+  shuffleInPlace(items, Math.random);
+
+  items.sort((a, b) => {
+    const aSeen = recentQSet.has(a.key) ? 1 : 0;
+    const bSeen = recentQSet.has(b.key) ? 1 : 0;
+    if (aSeen !== bSeen) return aSeen - bSeen;
+    const aKw = recentKwSet.has(a.kw) ? 1 : 0;
+    const bKw = recentKwSet.has(b.kw) ? 1 : 0;
+    if (aKw !== bKw) return aKw - bKw;
+    if (aSeen) return recentQ.indexOf(a.key) - recentQ.indexOf(b.key);
+    return 0;
   });
 
-  shuffleInPlace(fresh, rng);
-  shuffleInPlace(stale, rng);
+  const picked = [];
+  const usedKey = new Set();
+  const usedKw = new Set();
 
-  // Prefer questions that haven't appeared recently; only reuse when bank is exhausted.
-  const ordered = fresh.length >= count ? fresh : [...fresh, ...stale];
-  const n = Math.min(count, ordered.length);
-  const pickedIdxs = ordered.slice(0, n);
-  const picked = pickedIdxs.map((i) => all[i]);
-  rememberQuestionKeys(pickedIdxs.map((i) => questionKey(all[i], i)));
-  return picked;
+  const take = (allowRecentQ, allowRecentKw, allowSameKw) => {
+    for (const item of items) {
+      if (picked.length >= count) return;
+      if (usedKey.has(item.key)) continue;
+      if (!allowRecentQ && recentQSet.has(item.key)) continue;
+      if (!allowSameKw && usedKw.has(item.kw)) continue;
+      if (!allowRecentKw && recentKwSet.has(item.kw)) continue;
+      picked.push(item);
+      usedKey.add(item.key);
+      if (item.kw) usedKw.add(item.kw);
+    }
+  };
+
+  take(false, false, false);
+  take(false, true, false);
+  take(true, true, false);
+  take(true, true, true);
+
+  rememberQuestionKeys(picked.map((p) => p.key));
+  rememberKeywords(picked.map((p) => p.kw));
+  return picked.map((p) => p.q);
 }
 
 /** Recent crossword placements (word + direction + start cell) to avoid repeats. */
 function loadRecentPlacements() {
-  try {
-    const raw = localStorage.getItem("phonepe_recent_placements");
-    const list = raw ? JSON.parse(raw) : [];
-    return Array.isArray(list) ? list.map(String) : [];
-  } catch {
-    return [];
-  }
+  return loadRecentList("phonepe_recent_placements");
 }
 
 function rememberPlacements(keys) {
-  try {
-    const maxKeep = 48;
-    const merged = [...loadRecentPlacements(), ...keys.map(String)];
-    localStorage.setItem("phonepe_recent_placements", JSON.stringify(merged.slice(-maxKeep)));
-  } catch {}
+  rememberList("phonepe_recent_placements", keys, 160);
 }
 
 function placementSignature(word, dir, start, size) {
   return `${word}|${dir.dr},${dir.dc}|${start.r},${start.c}|${size}`;
+}
+
+function placementStartKey(word, start, size) {
+  return `${word}|@|${start.r},${start.c}|${size}`;
 }
 
 /** All keywords for this player's 10 questions — target first, others jumbled. */
@@ -269,9 +309,9 @@ function delay(ms) {
 function getNextVariantIndex(maxVariants) {
   const key = "phonepe_puzzle_variant";
   try {
-    let idx = parseInt(sessionStorage.getItem(key) || "0", 10);
+    let idx = parseInt(localStorage.getItem(key) || "0", 10);
     if (!Number.isFinite(idx) || idx < 0) idx = 0;
-    sessionStorage.setItem(key, String((idx + 1) % maxVariants));
+    localStorage.setItem(key, String((idx + 1) % maxVariants));
     return idx;
   } catch {
     return Math.floor(Math.random() * maxVariants);
@@ -333,38 +373,71 @@ function computeGridSize(words, minSize, maxSize) {
   return Math.min(maxSize, Math.max(base, minSize));
 }
 
+function listPlacementCandidates(size, wordLen) {
+  const out = [];
+  for (const dir of DIRS) {
+    const rMax = dir.dr === 1 ? size - wordLen : size - 1;
+    const cMax = dir.dc === 1 ? size - wordLen : size - 1;
+    if (rMax < 0 || cMax < 0) continue;
+    for (let r = 0; r <= rMax; r++) {
+      for (let c = 0; c <= cMax; c++) out.push({ dir, r, c });
+    }
+  }
+  return out;
+}
+
 function tryPlaceWord(grid, word, wordIndex, rng, forbidden = new Set()) {
   const size = grid.length;
-  const dir = choice(DIRS, rng);
   const letters = word.split("");
-  const dr = dir.dr;
-  const dc = dir.dc;
-  const rMin = 0;
-  const rMax = dr === 1 ? size - letters.length : size - 1;
-  const cMin = 0;
-  const cMax = dc === 1 ? size - letters.length : size - 1;
-  if (rMax < rMin || cMax < cMin) return null;
-
-  const startR = rMin + randInt(rMax - rMin + 1, rng);
-  const startC = cMin + randInt(cMax - cMin + 1, rng);
-  const sig = placementSignature(word, dir, { r: startR, c: startC }, size);
-  if (forbidden.has(sig)) return null;
-
-  const cells = [];
-  for (let i = 0; i < letters.length; i++) {
-    const r = startR + dr * i;
-    const c = startC + dc * i;
-    const cur = grid[r][c];
-    if (cur.letter && cur.letter !== letters[i]) return null;
-    cells.push({ r, c });
+  const cands = listPlacementCandidates(size, letters.length);
+  shuffleInPlace(cands, rng);
+  const allowed = [];
+  const blocked = [];
+  for (const cand of cands) {
+    const start = { r: cand.r, c: cand.c };
+    const sig = placementSignature(word, cand.dir, start, size);
+    const startKey = placementStartKey(word, start, size);
+    if (forbidden.has(sig) || forbidden.has(startKey)) blocked.push(cand);
+    else allowed.push(cand);
   }
 
-  for (let i = 0; i < letters.length; i++) {
-    const { r, c } = cells[i];
-    grid[r][c].letter = letters[i];
-    grid[r][c].belongsTo.add(wordIndex);
+  const tryCand = (cand) => {
+    const dr = cand.dir.dr;
+    const dc = cand.dir.dc;
+    const cells = [];
+    for (let i = 0; i < letters.length; i++) {
+      const r = cand.r + dr * i;
+      const c = cand.c + dc * i;
+      const cur = grid[r][c];
+      if (cur.letter && cur.letter !== letters[i]) return null;
+      cells.push({ r, c });
+    }
+    for (let i = 0; i < letters.length; i++) {
+      const { r, c } = cells[i];
+      grid[r][c].letter = letters[i];
+      grid[r][c].belongsTo.add(wordIndex);
+    }
+    const start = { r: cand.r, c: cand.c };
+    return {
+      dir: cand.dir,
+      reversed: false,
+      start,
+      cells,
+      word,
+      signature: placementSignature(word, cand.dir, start, size),
+      startKey: placementStartKey(word, start, size),
+    };
+  };
+
+  for (const cand of allowed) {
+    const placed = tryCand(cand);
+    if (placed) return placed;
   }
-  return { dir, reversed: false, start: { r: startR, c: startC }, cells, signature: sig };
+  for (const cand of blocked) {
+    const placed = tryCand(cand);
+    if (placed) return placed;
+  }
+  return null;
 }
 
 function generateWordSearch(words, cfgGrid, seed, forbiddenPlacements = new Set()) {
@@ -372,8 +445,11 @@ function generateWordSearch(words, cfgGrid, seed, forbiddenPlacements = new Set(
   const minSize = cfgGrid.minSize ?? 14;
   const maxSize = cfgGrid.maxSize ?? 24;
   let size = computeGridSize(normalized, minSize, maxSize);
-  // Mix wall-clock into seed so consecutive games don't rebuild the same layout.
-  const baseSeed = (seed >>> 0) ^ ((Date.now() * 2654435761) >>> 0);
+  const baseSeed =
+    ((seed >>> 0) ^
+      ((Date.now() * 2654435761) >>> 0) ^
+      ((Math.random() * 0xffffffff) >>> 0)) >>>
+    0;
 
   const attemptBuild = (forbidden, seedSalt) => {
     const rng = seededRandom(baseSeed ^ seedSalt);
@@ -422,7 +498,9 @@ function generateWordSearch(words, cfgGrid, seed, forbiddenPlacements = new Set(
           }
         }
 
-        const signatures = placedByOrig.filter(Boolean).map((p) => p.signature);
+        const signatures = placedByOrig
+          .filter(Boolean)
+          .flatMap((p) => [p.signature, p.startKey].filter(Boolean));
         rememberPlacements(signatures);
 
         return {
@@ -572,11 +650,7 @@ function startGame() {
   clearTimers();
   const variantCount = cfg.puzzleVariants ?? 10;
   state.puzzleVariant = getNextVariantIndex(variantCount);
-  state.roundQuestions = pickRoundQuestions(
-    cfg.questions,
-    roundsPerGame(),
-    state.puzzleVariant * 7919 + Date.now(),
-  );
+  state.roundQuestions = pickRoundQuestions(cfg.questions, roundsPerGame());
   state.questionIndex = 0;
   state.totalScore = 0;
   state.roundScores = [];
