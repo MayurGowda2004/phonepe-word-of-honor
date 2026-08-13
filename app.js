@@ -1245,7 +1245,7 @@ function renderEnterDetails() {
     }
     state.playerName = name;
     state.employeeId = id;
-    goReady();
+    goRules();
   });
 }
 
@@ -1259,6 +1259,7 @@ function renderRules() {
       <div class="screen-body rules-body">
         ${renderBrandBanner()}
         <div class="panel rules-panel" data-ui="rules-panel">
+          <div class="panel-kicker">Game rules</div>
           <h2 class="form-title">Play across 4 rounds</h2>
           <p class="form-lead">
             Answer quizzes, then find integrity keywords on the touch screen.
