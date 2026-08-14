@@ -128,23 +128,11 @@ function isFinalMcqRound() {
   return state.questionIndex >= state.roundQuestions.length - 1;
 }
 
-/** Excel A/B plus question-specific third wrong option (optionC). */
-function getQuizOptions(q) {
-  const a = q.options?.[0] ?? "";
-  const b = q.options?.[1] ?? "";
-  const c = q.optionC ?? q.options?.[2] ?? "Proceed without checking the policy.";
-  return [a, b, c];
-}
-
-/** Shuffle A/B/C so the correct answer can appear in any position. */
+/** Official Excel options only — Option A and Option B. */
 function buildShuffledQuizOptions(q, seed) {
   const items = [
     { text: q.options?.[0] ?? "", isCorrect: q.correctIndex === 0 },
     { text: q.options?.[1] ?? "", isCorrect: q.correctIndex === 1 },
-    {
-      text: q.optionC ?? q.options?.[2] ?? "Proceed without checking the policy.",
-      isCorrect: false,
-    },
   ];
   shuffleInPlace(items, seededRandom(seed));
   return {

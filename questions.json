@@ -48,8 +48,7 @@
         "Yes, this is allowed as long as it is within moderate limits."
       ],
       "correctIndex": 0,
-      "categoryWord": "SAFETY",
-      "optionC": "One drink is fine if the team agrees informally."
+      "categoryWord": "SAFETY"
     },
     {
       "allegation": "AML",
@@ -59,8 +58,7 @@
         "Placement, Layering, Structuring, Integration"
       ],
       "correctIndex": 0,
-      "categoryWord": "FRAUD",
-      "optionC": "SEBI Act"
+      "categoryWord": "FRAUD"
     },
     {
       "allegation": "AML",
@@ -70,8 +68,7 @@
         "Tipping Off"
       ],
       "correctIndex": 1,
-      "categoryWord": "FRAUD",
-      "optionC": "Identity Theft"
+      "categoryWord": "FRAUD"
     },
     {
       "allegation": "AML",
@@ -81,8 +78,7 @@
         "Prevention of Money Laundering Act"
       ],
       "correctIndex": 1,
-      "categoryWord": "FRAUD",
-      "optionC": "To attract a large number of new customers quickly."
+      "categoryWord": "FRAUD"
     },
     {
       "allegation": "AML",
@@ -92,8 +88,7 @@
         "Identity Theft"
       ],
       "correctIndex": 0,
-      "categoryWord": "FRAUD",
-      "optionC": "If the transaction amount exceeds ₹1,000,000."
+      "categoryWord": "FRAUD"
     },
     {
       "allegation": "AML",
@@ -103,8 +98,7 @@
         "To exercise due diligence regarding potential customers and prevent money laundering and terrorist financing."
       ],
       "correctIndex": 1,
-      "categoryWord": "FRAUD",
-      "optionC": "Providing helpful customer service guidance on transaction limits."
+      "categoryWord": "FRAUD"
     },
     {
       "allegation": "AML",
@@ -114,8 +108,7 @@
         "Immediately, whenever there is a suspicion of money laundering, fraud, or terrorist financing regardless of amount."
       ],
       "correctIndex": 1,
-      "categoryWord": "FRAUD",
-      "optionC": "Know your Client"
+      "categoryWord": "FRAUD"
     },
     {
       "allegation": "AML",
@@ -125,8 +118,7 @@
         "Providing helpful customer service guidance on transaction limits."
       ],
       "correctIndex": 0,
-      "categoryWord": "FRAUD",
-      "optionC": "To rapidly onboard users by skipping verification steps during festive promotions."
+      "categoryWord": "FRAUD"
     },
     {
       "allegation": "AML",
@@ -136,8 +128,7 @@
         "Know your Customer"
       ],
       "correctIndex": 1,
-      "categoryWord": "FRAUD",
-      "optionC": "Placement, Layering, Structuring, Integration"
+      "categoryWord": "FRAUD"
     },
     {
       "allegation": "AML",
@@ -147,8 +138,7 @@
         "To rapidly onboard users by skipping verification steps during festive promotions."
       ],
       "correctIndex": 0,
-      "categoryWord": "FRAUD",
-      "optionC": "Customer Notification"
+      "categoryWord": "FRAUD"
     },
     {
       "allegation": "Bribery",
@@ -158,8 +148,7 @@
         "A software vendor that interacts with PhonePe employees."
       ],
       "correctIndex": 0,
-      "categoryWord": "BRIBERY",
-      "optionC": "Accept the resume and forward it to the recruiting team as requested."
+      "categoryWord": "BRIBERY"
     },
     {
       "allegation": "Bribery",
@@ -169,8 +158,7 @@
         "You are required to report this to Ethics irrespective of the value of the fees"
       ],
       "correctIndex": 1,
-      "categoryWord": "BRIBERY",
-      "optionC": "Standard operational risk with no compliance implications."
+      "categoryWord": "BRIBERY"
     },
     {
       "allegation": "Bribery",
@@ -180,8 +168,7 @@
         "Decline bribe solicitation and immediately report it to Ethics."
       ],
       "correctIndex": 1,
-      "categoryWord": "BRIBERY",
-      "optionC": "A software vendor that interacts with PhonePe employees."
+      "categoryWord": "BRIBERY"
     },
     {
       "allegation": "Bribery",
@@ -191,8 +178,7 @@
         "It is allowed only if the value is equivalent or less than ₹ 5000."
       ],
       "correctIndex": 0,
-      "categoryWord": "BRIBERY",
-      "optionC": "It depends upon the value of the facilitation fees."
+      "categoryWord": "BRIBERY"
     },
     {
       "allegation": "Bribery",
@@ -202,8 +188,7 @@
         "Physical cash, gift cards, alcohol, and tobacco."
       ],
       "correctIndex": 1,
-      "categoryWord": "BRIBERY",
-      "optionC": "Decline the request. No need report it because no bribe has taken place."
+      "categoryWord": "BRIBERY"
     },
     {
       "allegation": "Bribery",
@@ -213,8 +198,7 @@
         "Decline the offer and report it to Ethics."
       ],
       "correctIndex": 1,
-      "categoryWord": "BRIBERY",
-      "optionC": "It is allowed only if the value is equivalent or less than ₹ 5000."
+      "categoryWord": "BRIBERY"
     },
     {
       "allegation": "Bribery",
@@ -224,8 +208,7 @@
         "Standard operational risk with no compliance implications."
       ],
       "correctIndex": 0,
-      "categoryWord": "BRIBERY",
-      "optionC": "Food, Goods, and Services, such as volunteering."
+      "categoryWord": "BRIBERY"
     },
     {
       "allegation": "Code of Conduct",
@@ -235,8 +218,7 @@
         "Yes, reach out and report it to Ethics as this is retaliation."
       ],
       "correctIndex": 1,
-      "categoryWord": "RETALIATION",
-      "optionC": "Women employees"
+      "categoryWord": "RETALIATION"
     },
     {
       "allegation": "Code of Conduct",
@@ -246,8 +228,7 @@
         "Late arrival to office, software bugs, and minor equipment loss."
       ],
       "correctIndex": 0,
-      "categoryWord": "ETHICS",
-      "optionC": "No, as the management will be take care of it."
+      "categoryWord": "ETHICS"
     },
     {
       "allegation": "Code of Conduct",
@@ -257,8 +238,7 @@
         "Child Labour (Prohibition and Regulation) Act, 1986"
       ],
       "correctIndex": 0,
-      "categoryWord": "ETHICS",
-      "optionC": "Late arrival to office, software bugs, and minor equipment loss."
+      "categoryWord": "ETHICS"
     },
     {
       "allegation": "Code of Conduct",
@@ -268,8 +248,7 @@
         "Employer"
       ],
       "correctIndex": 1,
-      "categoryWord": "ETHICS",
-      "optionC": "Child Labour (Prohibition and Regulation) Act, 1986"
+      "categoryWord": "ETHICS"
     },
     {
       "allegation": "Commercial Bribery",
@@ -279,8 +258,7 @@
         "Accept the offer, if the candidate matches the job requirement."
       ],
       "correctIndex": 0,
-      "categoryWord": "BRIBERY",
-      "optionC": "Conflict of Interest, because the specialist is accepting a routine corporate gift from an established partner."
+      "categoryWord": "BRIBERY"
     },
     {
       "allegation": "Commercial Bribery",
@@ -290,8 +268,7 @@
         "Commercial Bribery, because a PhonePe employee was offered an improper benefit by a vendor in connection with a business decision."
       ],
       "correctIndex": 1,
-      "categoryWord": "BRIBERY",
-      "optionC": "Accept the offer, if the candidate matches the job requirement."
+      "categoryWord": "BRIBERY"
     },
     {
       "allegation": "Conflict of Interest",
@@ -301,8 +278,7 @@
         "Yes, it is acceptable as long as other business companies are also part of the initiative."
       ],
       "correctIndex": 0,
-      "categoryWord": "CONFLICT",
-      "optionC": "Supplier"
+      "categoryWord": "CONFLICT"
     },
     {
       "allegation": "Conflict of Interest",
@@ -312,8 +288,7 @@
         "False, it is generally allowed provided the investment amount is small."
       ],
       "correctIndex": 0,
-      "categoryWord": "CONFLICT",
-      "optionC": "Yes, it is acceptable as long as other business companies are also part of the initiative."
+      "categoryWord": "CONFLICT"
     },
     {
       "allegation": "Conflict of Interest",
@@ -323,8 +298,7 @@
         "Yes, if you have no direct or indirect influence over PhonePe's business relationship with that vendor."
       ],
       "correctIndex": 1,
-      "categoryWord": "CONFLICT",
-      "optionC": "False, it is generally allowed provided the investment amount is small."
+      "categoryWord": "CONFLICT"
     },
     {
       "allegation": "Conflict of Interest",
@@ -334,8 +308,7 @@
         "False, samples remain business property and cannot be kept or sold for personal use. You required to return it."
       ],
       "correctIndex": 1,
-      "categoryWord": "CONFLICT",
-      "optionC": "No, any gift from a PhonePe vendor is strictly prohibited regardless of your role."
+      "categoryWord": "CONFLICT"
     },
     {
       "allegation": "Conflict of Interest",
@@ -345,8 +318,7 @@
         "No disclosure is required as long as the vendor offers competitive market pricing."
       ],
       "correctIndex": 0,
-      "categoryWord": "CONFLICT",
-      "optionC": "True, samples may be kept or used personally once evaluation is complete."
+      "categoryWord": "CONFLICT"
     },
     {
       "allegation": "Conflict of Interest",
@@ -356,8 +328,7 @@
         "Yes, using PhonePe resources or role to promote a personal side business is a policy violation."
       ],
       "correctIndex": 1,
-      "categoryWord": "CONFLICT",
-      "optionC": "No disclosure is required as long as the vendor offers competitive market pricing."
+      "categoryWord": "CONFLICT"
     },
     {
       "allegation": "Conflict of Interest",
@@ -367,8 +338,7 @@
         "False, only formal family relationships qualify as a Conflict of Interest"
       ],
       "correctIndex": 0,
-      "categoryWord": "CONFLICT",
-      "optionC": "No, provided it does not interfere with daily work productivity or tasks."
+      "categoryWord": "CONFLICT"
     },
     {
       "allegation": "Conflict of Interest",
@@ -378,8 +348,7 @@
         "Discuss with your manager and reach out to Corporate Communications, Legal, and Ethics for approval."
       ],
       "correctIndex": 1,
-      "categoryWord": "CONFLICT",
-      "optionC": "False, only formal family relationships qualify as a Conflict of Interest"
+      "categoryWord": "CONFLICT"
     },
     {
       "allegation": "Conflict of Interest",
@@ -389,8 +358,7 @@
         "No, you should not report it as it is a private personal matter between them."
       ],
       "correctIndex": 0,
-      "categoryWord": "CONFLICT",
-      "optionC": "You may proceed as long as no media representatives are present in the room."
+      "categoryWord": "CONFLICT"
     },
     {
       "allegation": "Conflict of Interest",
@@ -400,8 +368,7 @@
         "Accepting minimal product samples from a prospective vendor solely for testing and evaluation purposes."
       ],
       "correctIndex": 0,
-      "categoryWord": "CONFLICT",
-      "optionC": "No, you should not report it as it is a private personal matter between them."
+      "categoryWord": "CONFLICT"
     },
     {
       "allegation": "Conflict of Interest",
@@ -411,8 +378,7 @@
         "Conflict of Interest - Gift from Supplier"
       ],
       "correctIndex": 1,
-      "categoryWord": "CONFLICT",
-      "optionC": "Accepting minimal product samples from a prospective vendor solely for testing and evaluation purposes."
+      "categoryWord": "CONFLICT"
     },
     {
       "allegation": "Conflict of Interest",
@@ -422,8 +388,7 @@
         "Fraud"
       ],
       "correctIndex": 0,
-      "categoryWord": "CONFLICT",
-      "optionC": "Conflict of Interest - Supplier Relationship"
+      "categoryWord": "CONFLICT"
     },
     {
       "allegation": "Conflict of Interest",
@@ -433,8 +398,7 @@
         "Supplier"
       ],
       "correctIndex": 0,
-      "categoryWord": "CONFLICT",
-      "optionC": "Fraud"
+      "categoryWord": "CONFLICT"
     },
     {
       "allegation": "D&H",
@@ -444,8 +408,7 @@
         "Prevention of Sexual Harassment at Workplace"
       ],
       "correctIndex": 0,
-      "categoryWord": "RESPECT",
-      "optionC": "Discrimination based on gender identity"
+      "categoryWord": "RESPECT"
     },
     {
       "allegation": "D&H",
@@ -455,8 +418,7 @@
         "Discrimination & harassment based on religion"
       ],
       "correctIndex": 0,
-      "categoryWord": "RESPECT",
-      "optionC": "Discrimination based on gender"
+      "categoryWord": "RESPECT"
     },
     {
       "allegation": "D&H",
@@ -466,8 +428,7 @@
         "Discrimination based on gender"
       ],
       "correctIndex": 1,
-      "categoryWord": "RESPECT",
-      "optionC": "No, as current legal provisions do not support such complaints."
+      "categoryWord": "RESPECT"
     },
     {
       "allegation": "D&H",
@@ -477,8 +438,7 @@
         "Discrimination based on gender identity"
       ],
       "correctIndex": 1,
-      "categoryWord": "RESPECT",
-      "optionC": "Ignore it to avoid creating conflict in the group chat."
+      "categoryWord": "RESPECT"
     },
     {
       "allegation": "D&H",
@@ -488,8 +448,7 @@
         "Yes, such a complaint is recognized as a violation of the Code of Conduct."
       ],
       "correctIndex": 1,
-      "categoryWord": "RESPECT",
-      "optionC": "Prevention of Sexual Harassment at Workplace"
+      "categoryWord": "RESPECT"
     },
     {
       "allegation": "D&H",
@@ -499,8 +458,7 @@
         "Ignore it to avoid creating conflict in the group chat."
       ],
       "correctIndex": 0,
-      "categoryWord": "RESPECT",
-      "optionC": "Discrimination & harassment based on religion"
+      "categoryWord": "RESPECT"
     },
     {
       "allegation": "D&H",
@@ -510,8 +468,7 @@
         "Discrimination based on disability"
       ],
       "correctIndex": 1,
-      "categoryWord": "RESPECT",
-      "optionC": "Discrimination based on gender identity"
+      "categoryWord": "RESPECT"
     },
     {
       "allegation": "Environment, Health & Safety",
@@ -521,8 +478,7 @@
         "Ignore it since facilities staff will eventually move the crates during routine cleaning."
       ],
       "correctIndex": 0,
-      "categoryWord": "SAFETY",
-      "optionC": "Disposing of all waste in a single bin"
+      "categoryWord": "SAFETY"
     },
     {
       "allegation": "Environment, Health & Safety",
@@ -532,8 +488,7 @@
         "To minimize equipment expenditure across facility operations."
       ],
       "correctIndex": 0,
-      "categoryWord": "SAFETY",
-      "optionC": "Ignore it since facilities staff will eventually move the crates during routine cleaning."
+      "categoryWord": "SAFETY"
     },
     {
       "allegation": "Environment, Health & Safety",
@@ -543,8 +498,7 @@
         "Fix the wiring themselves using office stationery tape."
       ],
       "correctIndex": 0,
-      "categoryWord": "SAFETY",
-      "optionC": "To minimize equipment expenditure across facility operations."
+      "categoryWord": "SAFETY"
     },
     {
       "allegation": "Environment, Health & Safety",
@@ -554,8 +508,7 @@
         "Use passenger elevators to evacuate as quickly as possible."
       ],
       "correctIndex": 0,
-      "categoryWord": "SAFETY",
-      "optionC": "Fix the wiring themselves using office stationery tape."
+      "categoryWord": "SAFETY"
     },
     {
       "allegation": "Environment, Health & Safety",
@@ -565,8 +518,7 @@
         "Practicing waste segregation"
       ],
       "correctIndex": 1,
-      "categoryWord": "SAFETY",
-      "optionC": "Use passenger elevators to evacuate as quickly as possible."
+      "categoryWord": "SAFETY"
     },
     {
       "allegation": "Financial Integrity",
@@ -576,8 +528,7 @@
         "Yes, as long as total annual revenue numbers remain identical."
       ],
       "correctIndex": 0,
-      "categoryWord": "INTEGRITY",
-      "optionC": "Secondary Engagement violation"
+      "categoryWord": "INTEGRITY"
     },
     {
       "allegation": "Financial Integrity",
@@ -587,8 +538,7 @@
         "Financial Integrity violation"
       ],
       "correctIndex": 1,
-      "categoryWord": "INTEGRITY",
-      "optionC": "Fraudulent onboarding of merchants"
+      "categoryWord": "INTEGRITY"
     },
     {
       "allegation": "Financial Integrity",
@@ -598,8 +548,7 @@
         "Manipulating tax balances"
       ],
       "correctIndex": 1,
-      "categoryWord": "INTEGRITY",
-      "optionC": "Approve invoices immediately as the finance team will take care of it."
+      "categoryWord": "INTEGRITY"
     },
     {
       "allegation": "Financial Integrity",
@@ -609,8 +558,7 @@
         "Verify that services/goods were genuinely received and pricing matches authorized purchase orders."
       ],
       "correctIndex": 1,
-      "categoryWord": "INTEGRITY",
-      "optionC": "Yes, as long as total annual revenue numbers remain identical."
+      "categoryWord": "INTEGRITY"
     },
     {
       "allegation": "Fraud",
@@ -620,8 +568,7 @@
         "Conflict of interest."
       ],
       "correctIndex": 0,
-      "categoryWord": "FRAUD",
-      "optionC": "Ignore suspicious activity unless you have full proof."
+      "categoryWord": "FRAUD"
     },
     {
       "allegation": "IT Compliance",
@@ -631,8 +578,7 @@
         "Do not click the link; report the suspicious email immediately to Information Security / IT."
       ],
       "correctIndex": 1,
-      "categoryWord": "PHISHING",
-      "optionC": "Wait 48 hours to search personally before informing IT."
+      "categoryWord": "PHISHING"
     },
     {
       "allegation": "IT Compliance",
@@ -642,8 +588,7 @@
         "Yes, if the colleague works in the same project team."
       ],
       "correctIndex": 0,
-      "categoryWord": "COMPLIANCE",
-      "optionC": "A software that analyses network traffic for security vulnerabilities."
+      "categoryWord": "COMPLIANCE"
     },
     {
       "allegation": "IT Compliance",
@@ -653,8 +598,7 @@
         "To avoid using any third-party services."
       ],
       "correctIndex": 0,
-      "categoryWord": "COMPLIANCE",
-      "optionC": "A hacker trying to break into computer systems."
+      "categoryWord": "COMPLIANCE"
     },
     {
       "allegation": "IT Compliance",
@@ -664,8 +608,7 @@
         "Yes, provided the software is downloaded free of cost."
       ],
       "correctIndex": 0,
-      "categoryWord": "COMPLIANCE",
-      "optionC": "Click the link and update the password quickly to avoid account lock."
+      "categoryWord": "COMPLIANCE"
     },
     {
       "allegation": "IT Compliance",
@@ -675,8 +618,7 @@
         "You can leave the workstation open if you are returning within 15 minutes."
       ],
       "correctIndex": 0,
-      "categoryWord": "COMPLIANCE",
-      "optionC": "Yes, if the colleague works in the same project team."
+      "categoryWord": "COMPLIANCE"
     },
     {
       "allegation": "IT Compliance",
@@ -686,8 +628,7 @@
         "Wait 48 hours to search personally before informing IT."
       ],
       "correctIndex": 0,
-      "categoryWord": "SECURITY",
-      "optionC": "To avoid using any third-party services."
+      "categoryWord": "SECURITY"
     },
     {
       "allegation": "IT Compliance",
@@ -697,8 +638,7 @@
         "A software that analyses network traffic for security vulnerabilities."
       ],
       "correctIndex": 0,
-      "categoryWord": "DATA",
-      "optionC": "Yes, provided the software is downloaded free of cost."
+      "categoryWord": "DATA"
     },
     {
       "allegation": "IT Compliance",
@@ -708,8 +648,7 @@
         "A hacker trying to break into computer systems."
       ],
       "correctIndex": 0,
-      "categoryWord": "SECURITY",
-      "optionC": "You can leave the workstation open if you are returning within 15 minutes."
+      "categoryWord": "SECURITY"
     },
     {
       "allegation": "L&E",
@@ -719,8 +658,7 @@
         "Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013"
       ],
       "correctIndex": 0,
-      "categoryWord": "LABOUR",
-      "optionC": "Labour Welfare Board"
+      "categoryWord": "LABOUR"
     },
     {
       "allegation": "L&E",
@@ -730,8 +668,7 @@
         "To build a retirement collection for employees through regular salary collection."
       ],
       "correctIndex": 1,
-      "categoryWord": "LABOUR",
-      "optionC": "Child Labour (Prohibition and Regulation) Act, 1986"
+      "categoryWord": "LABOUR"
     },
     {
       "allegation": "L&E",
@@ -741,8 +678,7 @@
         "Labour Welfare Board"
       ],
       "correctIndex": 0,
-      "categoryWord": "LABOUR",
-      "optionC": "Women employees"
+      "categoryWord": "LABOUR"
     },
     {
       "allegation": "L&E",
@@ -752,8 +688,7 @@
         "Child Labour (Prohibition and Regulation) Act, 1986"
       ],
       "correctIndex": 0,
-      "categoryWord": "LABOUR",
-      "optionC": "7 years"
+      "categoryWord": "LABOUR"
     },
     {
       "allegation": "L&E",
@@ -763,8 +698,7 @@
         "Employer"
       ],
       "correctIndex": 1,
-      "categoryWord": "LABOUR",
-      "optionC": "Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013"
+      "categoryWord": "LABOUR"
     },
     {
       "allegation": "L&E",
@@ -774,8 +708,7 @@
         "5 years"
       ],
       "correctIndex": 1,
-      "categoryWord": "LABOUR",
-      "optionC": "To provide short-term loans to employees for personal expenses."
+      "categoryWord": "LABOUR"
     },
     {
       "allegation": "L&P",
@@ -785,8 +718,7 @@
         "To register employees"
       ],
       "correctIndex": 0,
-      "categoryWord": "PERMITS",
-      "optionC": "Pollution Control Board License"
+      "categoryWord": "PERMITS"
     },
     {
       "allegation": "L&P",
@@ -796,8 +728,7 @@
         "Shops and Establishment License"
       ],
       "correctIndex": 1,
-      "categoryWord": "LICENSE",
-      "optionC": "To register employees"
+      "categoryWord": "LICENSE"
     },
     {
       "allegation": "Mishandling Business Information",
@@ -807,8 +738,7 @@
         "Friendly financial advice."
       ],
       "correctIndex": 0,
-      "categoryWord": "BUSINESS",
-      "optionC": "Press releases already published on PhonePe's official website."
+      "categoryWord": "BUSINESS"
     },
     {
       "allegation": "Mishandling Business Information",
@@ -818,8 +748,7 @@
         "Press releases already published on PhonePe's official website."
       ],
       "correctIndex": 0,
-      "categoryWord": "BUSINESS",
-      "optionC": "Accept the trade since it provides competitive intelligence."
+      "categoryWord": "BUSINESS"
     },
     {
       "allegation": "Mishandling Business Information",
@@ -829,8 +758,7 @@
         "Accept the trade since it provides competitive intelligence."
       ],
       "correctIndex": 0,
-      "categoryWord": "BUSINESS",
-      "optionC": "Personal Identifiable Information"
+      "categoryWord": "BUSINESS"
     },
     {
       "allegation": "Mishandling Business Information",
@@ -840,8 +768,7 @@
         "Competitively Sensitive Information"
       ],
       "correctIndex": 1,
-      "categoryWord": "BUSINESS",
-      "optionC": "Friendly financial advice."
+      "categoryWord": "BUSINESS"
     },
     {
       "allegation": "Privacy",
@@ -851,8 +778,7 @@
         "Verify their identity, then provide the information according to company policy and applicable laws."
       ],
       "correctIndex": 1,
-      "categoryWord": "PRIVACY",
-      "optionC": "True: Include more people for visibility, awareness, and issue prevention."
+      "categoryWord": "PRIVACY"
     },
     {
       "allegation": "Privacy",
@@ -862,8 +788,7 @@
         "ZIP code, birth date, and geographical details."
       ],
       "correctIndex": 0,
-      "categoryWord": "PRIVACY",
-      "optionC": "Regulating the types of devices employees can use."
+      "categoryWord": "PRIVACY"
     },
     {
       "allegation": "Privacy",
@@ -873,8 +798,7 @@
         "Writing down and storing passwords on sticky notes."
       ],
       "correctIndex": 1,
-      "categoryWord": "PRIVACY",
-      "optionC": "Fraud"
+      "categoryWord": "PRIVACY"
     },
     {
       "allegation": "Privacy",
@@ -884,8 +808,7 @@
         "Open Access Principle"
       ],
       "correctIndex": 0,
-      "categoryWord": "PRIVACY",
-      "optionC": "To increase website traffic"
+      "categoryWord": "PRIVACY"
     },
     {
       "allegation": "Privacy",
@@ -895,8 +818,7 @@
         "False: Share customer data only with individuals who have a legitimate business need."
       ],
       "correctIndex": 1,
-      "categoryWord": "PRIVACY",
-      "optionC": "Compliance, Legal. HR, IT, Infosec, and Engineering teams who handle data"
+      "categoryWord": "PRIVACY"
     },
     {
       "allegation": "Privacy",
@@ -906,8 +828,7 @@
         "Managing who can view or use specific resources and information."
       ],
       "correctIndex": 1,
-      "categoryWord": "PRIVACY",
-      "optionC": "Information Technology (IT) Act, 2000"
+      "categoryWord": "PRIVACY"
     },
     {
       "allegation": "Privacy",
@@ -917,8 +838,7 @@
         "Fraud"
       ],
       "correctIndex": 0,
-      "categoryWord": "PRIVACY",
-      "optionC": "Data Privacy and Digital Protection Association"
+      "categoryWord": "PRIVACY"
     },
     {
       "allegation": "Privacy",
@@ -928,8 +848,7 @@
         "To inform users about how their data will be collected and used"
       ],
       "correctIndex": 1,
-      "categoryWord": "PRIVACY",
-      "optionC": "Inform them that you cannot share any information due to company policy."
+      "categoryWord": "PRIVACY"
     },
     {
       "allegation": "Privacy",
@@ -939,8 +858,7 @@
         "Every PhonePe employee"
       ],
       "correctIndex": 1,
-      "categoryWord": "PRIVACY",
-      "optionC": "ZIP code, birth date, and geographical details."
+      "categoryWord": "PRIVACY"
     },
     {
       "allegation": "Privacy",
@@ -950,8 +868,7 @@
         "Digital Personal Data Protection (DPDP) Act, 2023"
       ],
       "correctIndex": 1,
-      "categoryWord": "PRIVACY",
-      "optionC": "Using a strong passphrase."
+      "categoryWord": "PRIVACY"
     },
     {
       "allegation": "Retaliation",
@@ -961,8 +878,7 @@
         "Ignore the concern, as it could be detrimental to your career."
       ],
       "correctIndex": 0,
-      "categoryWord": "RETALIATION",
-      "optionC": "No, it is considered acceptable as fun and banter."
+      "categoryWord": "RETALIATION"
     },
     {
       "allegation": "Retaliation",
@@ -972,8 +888,7 @@
         "If you feel retaliated, report it to Ethics."
       ],
       "correctIndex": 1,
-      "categoryWord": "RETALIATION",
-      "optionC": "Ignore the concern, as it could be detrimental to your career."
+      "categoryWord": "RETALIATION"
     },
     {
       "allegation": "Retaliation",
@@ -983,8 +898,7 @@
         "Checking in on a task that was due yesterday."
       ],
       "correctIndex": 0,
-      "categoryWord": "RETALIATION",
-      "optionC": "Remain quiet. The management will take care of it."
+      "categoryWord": "RETALIATION"
     },
     {
       "allegation": "Retaliation",
@@ -994,8 +908,7 @@
         "Yes, it can constitute as a form of retaliation."
       ],
       "correctIndex": 1,
-      "categoryWord": "RETALIATION",
-      "optionC": "Checking in on a task that was due yesterday."
+      "categoryWord": "RETALIATION"
     },
     {
       "allegation": "L&E",
@@ -1005,8 +918,7 @@
         "5 years"
       ],
       "correctIndex": 1,
-      "categoryWord": "COMPLIANCE",
-      "optionC": "Labour Welfare Board"
+      "categoryWord": "COMPLIANCE"
     },
     {
       "allegation": "Sexual Harassment",
@@ -1016,8 +928,7 @@
         "3 months"
       ],
       "correctIndex": 1,
-      "categoryWord": "POSH",
-      "optionC": "Inconclusive"
+      "categoryWord": "POSH"
     },
     {
       "allegation": "Sexual Harassment",
@@ -1027,8 +938,7 @@
         "Inconclusive"
       ],
       "correctIndex": 0,
-      "categoryWord": "POSH",
-      "optionC": "Hostile work environment"
+      "categoryWord": "POSH"
     },
     {
       "allegation": "Sexual Harassment",
@@ -1038,8 +948,7 @@
         "Hostile work environment"
       ],
       "correctIndex": 0,
-      "categoryWord": "POSH",
-      "optionC": "Internal Committee"
+      "categoryWord": "POSH"
     },
     {
       "allegation": "Sexual Harassment",
@@ -1049,8 +958,7 @@
         "Workplace"
       ],
       "correctIndex": 1,
-      "categoryWord": "POSH",
-      "optionC": "Verbal sexual harassment"
+      "categoryWord": "POSH"
     },
     {
       "allegation": "Sexual Harassment",
@@ -1060,8 +968,7 @@
         "Physical sexual harassment"
       ],
       "correctIndex": 1,
-      "categoryWord": "POSH",
-      "optionC": "Hostile work environment"
+      "categoryWord": "POSH"
     },
     {
       "allegation": "Sexual Harassment",
@@ -1071,8 +978,7 @@
         "Visual/non-verbal sexual harassment"
       ],
       "correctIndex": 1,
-      "categoryWord": "POSH",
-      "optionC": "True, parties have the right."
+      "categoryWord": "POSH"
     },
     {
       "allegation": "Sexual Harassment",
@@ -1082,8 +988,7 @@
         "False, legal practitioners are not allowed."
       ],
       "correctIndex": 1,
-      "categoryWord": "POSH",
-      "optionC": "Humiliation for not meeting work deadlines or targets."
+      "categoryWord": "POSH"
     },
     {
       "allegation": "Sexual Harassment",
@@ -1093,8 +998,7 @@
         "Humiliation as the employee refused the demand for a sexual favour."
       ],
       "correctIndex": 1,
-      "categoryWord": "POSH",
-      "optionC": "No protection exists if the accused is a senior executive."
+      "categoryWord": "POSH"
     },
     {
       "allegation": "Sexual Harassment",
@@ -1104,8 +1008,7 @@
         "No protection exists if the accused is a senior executive."
       ],
       "correctIndex": 0,
-      "categoryWord": "POSH",
-      "optionC": "True, the policy applies only to physical office premises."
+      "categoryWord": "POSH"
     },
     {
       "allegation": "Sexual Harassment",
@@ -1115,8 +1018,7 @@
         "True, the policy applies only to physical office premises."
       ],
       "correctIndex": 0,
-      "categoryWord": "POSH",
-      "optionC": "True, at PhonePe, only female employees can raise a concern as per the Act."
+      "categoryWord": "POSH"
     },
     {
       "allegation": "Sexual Harassment",
@@ -1126,8 +1028,7 @@
         "False, PhonePe's Code of Conduct extends such concerns to all genders."
       ],
       "correctIndex": 1,
-      "categoryWord": "POSH",
-      "optionC": "No, contractors must report only to their external parent agency."
+      "categoryWord": "POSH"
     },
     {
       "allegation": "Sexual Harassment",
@@ -1137,8 +1038,7 @@
         "No, contractors must report only to their external parent agency."
       ],
       "correctIndex": 0,
-      "categoryWord": "POSH",
-      "optionC": "3 weeks"
+      "categoryWord": "POSH"
     },
     {
       "allegation": "Privacy",
@@ -1148,8 +1048,7 @@
         "Data Privacy and Digital Protection Association"
       ],
       "correctIndex": 0,
-      "categoryWord": "PRIVACY",
-      "optionC": "Inform them that you cannot share any information due to company policy."
+      "categoryWord": "PRIVACY"
     }
   ]
 }
