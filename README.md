@@ -48,12 +48,12 @@ Open http://localhost:5173 — add `?kiosk=1` for kiosk hardening.
 
 Or run `.\start-kiosk.ps1` to launch Edge in kiosk mode.
 
-## Deploy (Vercel)
+## Deploy (Vercel · Spark Mindz)
+
+Pushes to `master`/`main` auto-deploy via GitHub Actions to the Spark Mindz Vercel project.
 
 ```powershell
-npx vercel deploy --prod
+.\deploy.ps1
 ```
 
-Live site: **https://phonepe-word-of-honor.vercel.app** (also https://phonepe-kiosk.vercel.app)
-
-GitHub Actions deploys on push to `main`/`master` when `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` secrets are valid.
+Live site: **https://phonepe-word-of-honor.vercel.app**
